@@ -16,6 +16,6 @@ Other languages:
 
 ## :coffee: Java
 
-- [《Java编程思想》笔记]()
+- [《Java编程思想》笔记](https://github.com/xiantang/Java-BackEnd-Notes/blob/master/doc/notes/think%20in%20java.md)
 
 
