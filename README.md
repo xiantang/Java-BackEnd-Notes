@@ -10,8 +10,12 @@ Other languages:
 
 ## :pencil2: 算法
 
-- [算法图解笔记](https://github.com/xiantang/grokking_algorithms)
-- [算法4th](https://github.com/xiantang/algorithm)
+- [《算法图解》笔记](https://github.com/xiantang/grokking_algorithms)
+- [《算法4th》笔记](https://github.com/xiantang/algorithm)
 
+
+## :coffee: Java
+
+- [《Java编程思想》笔记]()
 
 
