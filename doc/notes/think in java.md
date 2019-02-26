@@ -16,8 +16,9 @@
 * [第 2 章：一切都是对象](二、一切都是对象)
     * [用引用（reference）操纵对象](#用引用（reference）操纵对象)
 * [第 3 章：控制程序流](三控制程序流)
-
-
+    * [自动递增（increment）和递减（decrement） ](#自动递增（increment）和递减（decrement） )
+    * [关系操作符](#关系操作符)
+* [第 4 章：初始化与清除](四初始化与清除)
 
 # 前言
 * Java 上体现出的 Sun 公司的设计目标：为
@@ -165,7 +166,41 @@ member））
 对于前缀递增和前缀递减（如  ++a  或  --a  ），会先执行运
 算，再生成值。而对于后缀递增和后缀递减（如 a++或 a--），会先生成值，再执行运算。
 
-## 关系操作符（relational operator）
+## 关系操作符
 
 * ==和!=： 比较的就是对象的引用
 * equals()：比较两个对象的实际内容是否相同。
+
+# 四、初始化与清除
+
+## 以构造器确保初始化
+
+命名方法:
+* 取的名字会与成员名称相冲突
+* 必须让编译器知道应该调用哪个方法
+
+## 方法重载  
+* 缺省构造器
+* 有参构造器
+
+方法接受较小的基本类型作为参数时，如果传入参数较大，就需要进行参数转换。
+```java
+public class PrimitiveOverloading {
+    void  f1 (short x){
+        System.out.println("f1 (short x)");
+    }
+
+    public static void main(String[] args) {
+        PrimitiveOverloading primitiveOverloading = new PrimitiveOverloading();
+        int a = 111;
+        primitiveOverloading.f1((short) a);
+    }
+}
+
+```
+
+## 缺省构造器
+
+缺省构造器:没有形式参数。作用:创建一个"基本对象"。
+
+如果你写的类没有构造器，编译器会自动帮你创建一个缺省构造器。
