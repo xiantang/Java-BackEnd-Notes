@@ -123,4 +123,8 @@ HashTable 是传统的集合类 已经过时了，在Java4时候被重写了实�
 * StringBuilder是StringBuffer的替换，在字符串缓冲区被单个线程使用的时候，优先使用该类。
 
 
-引用[ConcurrentHashMap实现原理-源码调试](https://blog.csdn.net/xuxu120/article/details/52326772)
+引用
+* [ConcurrentHashMap实现原理-源码调试](https://blog.csdn.net/xuxu120/article/details/52326772)
+* [HashMap和Hashtable的区别](http://www.importnew.com/7010.html)
+* [Java关键字transient和volatile](https://dongruan00.iteye.com/blog/2090116)
+* [String,StringBuffer与StringBuilder的区别??](https://blog.csdn.net/rmn190/article/details/1492013)
