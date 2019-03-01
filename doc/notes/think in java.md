@@ -29,6 +29,8 @@
     * [终结条件](#终结条件)
 * [第 5 章 隐藏具体实现](#五隐藏具体实现)
 * [第 6 章 复用类](#复用类)
+
+* [第 7 章 多态](#七多态)
 # 前言
 * Java 上体现出的 Sun 公司的设计目标：为
 程序员降低复杂度。
@@ -135,8 +137,6 @@ Java的终极基类:Object
 于特定类型之上的类。
 
 # 二、一切都是对象  
-
-## 用引用（reference）操纵对象
 
 
 ## 存储到什么地方
@@ -371,7 +371,7 @@ length:所有数组都有一个固有成员，你可以通过它获取数组内
 如果数组的元素不是基本类型，就必须使用`new`。
 
 
-# 隐藏具体实现
+# 五、隐藏具体实现
 
 考虑的基本问题是"如何将变动的事物与保持不变的事物相互隔离"
 
@@ -403,7 +403,7 @@ Java解释器(interpreter)的运行过程:
 封装:把数据和方 法包装进类中，与具体实现的隐藏结合到一起。
 类是所有同类型对象的外观和行为进行描述的方式。
 
-# 复用类
+# 六、复用类
 
 ## 组合语法
 
@@ -438,3 +438,124 @@ Java解释器(interpreter)的运行过程:
 
  ## 为什么使用"向上转型"
  向上转型是一种较专有类型向通用类型的转型方式，所以总是很安全的。也就是说，导出类是基类的一个超集。向上转型的时候对于类的接口唯一丢失的就是方法。
+
+## 再次探究组合与继承
+
+慎用继承，先问一下自己:
+* 是否是需要从新类向基类向上转型
+* 是不是`is-a`模型
+
+## 关键字final
+通常是无法改变的。
+```java
+public class FinalData {
+         private static Test monitor = new Test();
+         private static Random rand = new Random();
+         private String id;
+         public FinalData(String id) { this.id = id; }
+         // Can be compile-time constants:
+         private final int VAL_ONE = 9;
+         private static final int VAL_TWO = 99;
+         // Typical public constant:
+         public static final int VAL_THREE = 39;
+         // Cannot be compile-time constants:
+         private final int i4 = rand.nextInt(20);
+         static final int i5 = rand.nextInt(20);
+         private Value v1 = new Value(11);
+         private final Value v2 = new Value(22);
+         private static final Value v3 = new Value(33);
+         // Arrays:
+         private final int[] a = { 1, 2, 3, 4, 5, 6 };
+         public String toString() {
+           return id + ": " + "i4 = " + i4 + ", i5 = " + i5;
+         }
+         public static void main(String[] args) {
+           FinalData fd1 = new FinalData("fd1");
+           //! fd1.VAL_ONE++; // Error: can't change value
+           fd1.v2.i++; // Object isn't constant!
+           fd1.v1 = new Value(9); // OK -- not final
+           for(int i = 0; i < fd1.a.length; i++)
+ www.plcworld.cn
+             fd1.a[i]++; // Object isn't constant!
+           //! fd1.v2 = new Value(0); // Error: Can't
+           //! fd1.v3 = new Value(1); // change reference
+           //! fd1.a = new int[3];
+           System.out.println(fd1);
+           System.out.println("Creating new FinalData");
+           FinalData fd2 = new FinalData("fd2");
+           System.out.println(fd1);
+           System.out.println(fd2);
+           monitor.expect(new String[] {
+             "%% fd1: i4 = \\d+, i5 = \\d+",
+             "Creating new FinalData",
+             "%% fd1: i4 = \\d+, i5 = \\d+",
+             "%% fd2: i4 = \\d+, i5 = \\d+"
+}); }
+}
+```
+* 数据
+    * 一个`static`又是`final`的域只占用一份不能改变的存储空间。
+    * 对于对象引用使用`final`,则表示引用恒定不变，就是一旦指向一个对象，就无法对他改变指向另一个对象。但是对象的自身是可以修改的。
+    * VAL_ONE和VAL_TOW是带有编译期数值的final原始类型，所以两者都可以用作编译期常量，没有重大区别。VAL_THREE 是一种更加典型的定义，定义为public,定义static是指只有一份，定义是final指说明他是一个常量。
+    * static 在装载的时候被初始化,不会因为创建对象时候都初始化。
+空白final:
+你被强制在数据成员的定义处或者是每个构造器中用表达式对 final 进行赋值。这正是 final
+数据成员在使用前总是被初始化的原因所在
+参数final:
+Java允许你在参数列表中以声明的方式指明为final。这意味着你无法在方法中以更改参数引用所指向的对象。  
+* 方法
+    * 锁住方法，以预防任何继承类修改他的定义。
+    * 效率:发现final方法调用命令时，会根据自己的谨慎判断，跳过插入程序代码的方式执行调用机制，提高效率，如果方法体过长，那么效率的提升不会很明显。（是直接将方法展开，以方法体重的实际代码替代原来的方法调用）
+    * private 隐含的都是final,你可以为private增加final 但是并不能内方法增加任何额外的意义。重写只有在某方法是基类接口的一部分才会出现，如果一个方法是private就不是基类接口的一部分。
+
+* 类
+    * 当你将整个类都定义为final的时候，就声名了你不打算继承该类。
+    * 由于类是final的所以所有方法都是隐含final的，不会被重写。
+
+## 初始化类加载
+
+第一个对象被构建的时候才发生加载，当访问static数据成员或者是static方法时候,才会被加载。static在初始化之初会在加载时依据程序的顺序一次初始化。
+
+* 先加载子类，但是过程中发现有基类，于是就继续去加载，不管你打算是否产生一个该基类的对象，都会发生
+
+   * 根基类的静态初始化后，静态初始化下一个导出类，以此类推。
+
+* 加载类必要的类之后，开始创建对象，对象的所有原始类型都是缺省值，引用被设置为0,基类构造器和导出类 的构造器一样，以相同的顺序来经历相同的过程。
+* 基类构造器完成后，实例变量才会初始化
+
+
+# 七、多态
+
+## 向上转型 
+
+```java
+public class Note {
+    private String noteName;
+
+    public Note(String noteName) {
+        // 因为wind 继承自instrument 所以instrument的接口一定定义在wind中
+        this.noteName = noteName;
+    }
+
+    @Override
+    public String toString() {
+        return noteName;
+    }
+
+    public static final Note
+            MIDDLE_C = new Note("Middle C"),
+            C_SHARP = new Note("C Sharp"),
+            B_FLAT = new Note("B Flat");
+}
+```
+因为wind 继承自instrument 所以instrument的接口一定定义在wind中
+
+
+## 方法调用绑定
+绑定:将一个方法调用与方法主体关联起来称作“绑定”。
+动态绑定:在运行的时候根据对象的类型进行绑定。
+
+Java中除了static和final方法其他方法都是后期绑定的。
+
+final的一个重要的作用就是关闭动态绑定，最好根据环境选择使用final，而不是为了提高性能。
+
