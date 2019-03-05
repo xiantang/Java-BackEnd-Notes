@@ -803,3 +803,18 @@ Set具有Collection完全一样的接口，没有任何额外的功能。
 * HashSet:为快速查找设计的 Set。存入 HashSet 的对象必须定 义 hashCode()。
 * TreeSet:保持次序的Set，底层为树。可以从Set中提取有序的序列。
 * LinkedHashSet()具有HashSet的查询速度，内部使用链表维护元素的顺序。
+
+保存元素的方式:
+
+* TreeSet 采用红黑树的数据结构排序元素。
+* HashSet 采用散列函数，目的是快速查找元素
+* LinkedHashSet 内部使用散列加快查询速度，同时使用链表维护次序，使得元素看上去是以插入的顺序保存的。
+
+## SortedSet
+* 使用SortSet(TreeSet是其唯一的实现),可以确保元素处于排序的状态，还可以使用SortedSet 接口提供的额外功能。
+* Comparator comparator()： 返回当前 Set 使用的 Comparator，或者返回 null，表示以自然方式排序。
+* Object first()：返回容器中的第一个元素。 Object last()：返回容器中的最末一个元素。 SortedSet subSet(fromElement, toElement): 生成此 Set 的子集，范围 从 fromElement（包含）到 toElement（不包含）。
+* SortedSet headSet(toElement): 生成此 Set 的子集，由小于 toElement 的 元素组成。
+* SortedSet tailSet(fromElement): 生成此 Set 的子集，由大于或等于 fromElement 的元素组成。
+
+SortSet的意思是 按比较函数对元素排序，不是指元素的插入次序排序。
