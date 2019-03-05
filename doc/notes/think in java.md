@@ -735,3 +735,71 @@ Java2 容器类类库的用途是"持有你的对象"，并将其划分成两个
 类型限制，即使你刻意保持容器的类型，例如类型“猫”的容器，别人还说可以轻易的将狗加入容器
 * 因为丢失了类型信息，容器只知道它保存的是Object类型的引用。所以使用容器中的元素前必须要
 做类型转换操作。
+
+## 迭代器
+
+迭代器是一种对象，他的工作是遍历并选择序列中的对象。
+
+* 使用方法 iterator()要求容器返回一个 Iterator。第一次调用 Iterator 的 next() 方法时，它返回序列的第一个元素。
+* 使用 next()获得序列中的下一个元素。
+* 使用 hasNext()检查序列中是否还有元素。
+* 使用 remove()将上一次返回的元素从迭代器中移除。
+
+## 容器的分类法
+
+![](https://img-blog.csdn.net/20180509171633197?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dzemN5MTk5NTAz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+* 常用的容器使用雷塞粗线表示。
+* 点线方框表示接口。
+* 虚线方框表示抽象类。
+* 点线箭头表示实现一个接口，如果是抽象类就表示实现部分接口。
+
+Abstract 开头的类只是为了实现特定的接口的简单工具而已。
+
+所以上图可以简化成
+
+![](https://img-blog.csdn.net/20160916112925172?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+
+Collection 的功能方法
+* boolean add(Object)
+
+* boolean addAll(Collection)
+
+* void clear( )
+
+* boolean contains(Object)
+
+* boolean containsAll(Collection)
+
+* boolean isEmpty( )
+
+* Iterator iterator( )
+
+* boolean remove(Object)
+
+* boolean removeAll(Collection)
+
+* boolean retainAll(Collection)
+
+* int size( )
+
+* Object[] toArray( )
+
+* Object[] toArray(Object[] a)
+
+## List的功能方法
+
+* ArrayList 随机访问元素
+* LinkedList 不是为了快速随机访问，而是一套更通用的方法
+
+`次序`是List最重要的特点,他保证维护元素特定的顺序。
+
+## Set的功能方法
+
+Set具有Collection完全一样的接口，没有任何额外的功能。
+实际上Set就是Collection，只是行为不同。
+
+* Set（接口）:存入Set的每个元素必须是唯一的，Set不保证能存入重复的元素，加入Set的元素必须定义equals()方法确定对象的唯一性。不保证次序的唯一性。
+* HashSet:为快速查找设计的 Set。存入 HashSet 的对象必须定 义 hashCode()。
+* TreeSet:保持次序的Set，底层为树。可以从Set中提取有序的序列。
+* LinkedHashSet()具有HashSet的查询速度，内部使用链表维护元素的顺序。
