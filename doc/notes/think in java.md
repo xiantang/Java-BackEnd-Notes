@@ -60,6 +60,7 @@
 * [第 10 章 类型检查](#类型检查)
     * [为什么需要RTTI](#为什么需要RTTI)
     * [Class 对象](#Class 对象)
+* [第 11 章 对象的集合](#对象的集合)
 # 前言
 * Java 上体现出的 Sun 公司的设计目标：为
 程序员降低复杂度。
@@ -874,3 +875,36 @@ public class FailFast {
 * WeakReference: 为了实现规范映射而设计的
 * PhontomReference:用做调度回收前的清理工作
 
+## WeakHashMap
+
+用来保存WeakReference
+每个值只保存一份实例来节省存储空间。
+WeakHashMap允许垃圾回收器自动清理键和值。
+
+
+```java
+public class CanonicalMapping {
+    public static void main(String[] args) {
+        int size = 1000;
+        Key[] keys = new Key[size];
+        WeakHashMap<Key, Value> map
+                = new WeakHashMap<>();
+        for (int i = 0; i < size; i++) {
+            Key k = new Key(Integer.toString(i));
+            Value v = new Value(Integer.toString(i));
+            if (i % 3 == 0) {
+                keys[i] = k;
+            }
+            map.put(k, v);
+        }
+        System.gc();
+    }
+
+}
+```
+
+可以看到垃圾回收器每个三个键就会跳过一个键，因为指向那个键的普通引用被存入了keys数组 
+所以那个对象不会被垃圾回收器回收
+
+
+# 十二、范型 
