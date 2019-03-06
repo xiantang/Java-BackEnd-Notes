@@ -684,6 +684,7 @@ RTTI和反射的区别
 
 # 十一、对象的集合
 
+
 ## 数组
 
 * Java的数组与容器会因为时刻存在的边界检查带来固定的性能开销。
@@ -818,3 +819,48 @@ Set具有Collection完全一样的接口，没有任何额外的功能。
 * SortedSet tailSet(fromElement): 生成此 Set 的子集，由大于或等于 fromElement 的元素组成。
 
 SortSet的意思是 按比较函数对元素排序，不是指元素的插入次序排序。
+
+## Map的功能和方法
+HashMap 基于散列表的实现（取代Hashtable）插入和查询 键值对的开销是固定的。可以通过构造器设置容量和装填因子，以调整容器的性能。
+
+* HashMap 使用equal()判断当前键是否和表中存在的键相同。
+* 默认的Object.equals() 只是比较对象的地址，如果使用自己的类作为
+
+自建对象为何要同时重写equal()和hashCode()
+hashCode 是生成你一个整型的值，该整形被处理后，作为数组下标放入Entry，equal() 方法是用来插入或者查询的时候在插入值和数组中的散列码比较相等之后，进行equal比较。
+
+为解决数组容量被固定的问题，不同的键可以产生相同的下标。可能会有冲突。
+
+## 覆盖HashCode 
+设计HashCode()时最重要因素，无论何时，同一个对象调用hashCode()都应该生成相同的值
+
+不应该使hashCode()依赖具有唯一性质的对象信息，尤其是使用this的值。
+
+
+## 选择接口的不同实现
+
+基于某个特定的操作，以及你需要执行的速度在他们中间进行选择。
+
+## 快速报错
+
+Java容器有一种保护机制，在你迭代某个容器的时候，有一个线程介入其中，修改删除某个对象。就会产生不可
+预料的后果。但是Java容器库采用了fail-fast机制，会探查容器上任何除了你进程操作以外的操作，一旦报错
+就抛出异常。
+
+```java
+public class FailFast {
+    public static void main(String[] args) {
+        Collection<String> c = new ArrayList<>();
+        Iterator<String> it = c.iterator();
+        ((ArrayList<String>) c).add("An Object");
+        try {
+            String s = it.next();
+        } catch (ConcurrentModificationException e) {
+            System.out.println(e);
+        }
+    }
+}
+```
+ 
+ 在取得迭代器之后，又有东西被放入容器。当程序的不同部分修改同一个容器的时候
+ 就可能导致容器状态不一样。

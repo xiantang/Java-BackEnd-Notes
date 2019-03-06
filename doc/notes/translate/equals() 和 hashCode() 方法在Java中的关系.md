@@ -27,10 +27,10 @@ public boolean equals  (Object obj)
 
 **Object类中一些关于equals()的原则**:如果某个其他对象等于给定对象，则它遵循以下规则：
 
-* Reflexive：对于任何引用a,`a.equals(a)`应该返回true。
-* Symmetric：对于任何引用a和b，如果`a.equals(b)`返回true,那么`b.equals(a)`必须返回true。
-* Transitive:对于任何引用a，b和c，如果`a.equals(b)`返回true，　并且`b.equals(c)`返回true，则`a.equals(c)`应该返回true。
-* Consistent:对于任何应用a和b,多次调用`a.equals(b)`始终返回true或始终返回false,前提是在没有修改对象`equals`比较中使用的信息。
+* 自反性：对于任何引用a,`a.equals(a)`应该返回true。
+* 对称性：对于任何引用a和b，如果`a.equals(b)`返回true,那么`b.equals(a)`必须返回true。
+* 传递性:对于任何引用a，b和c，如果`a.equals(b)`返回true，　并且`b.equals(c)`返回true，则`a.equals(c)`应该返回true。
+* 一致性:对于任何应用a和b,多次调用`a.equals(b)`始终返回true或始终返回false,前提是在没有修改对象`equals`比较中使用的信息。
 
 注:对于任何非空的引用a,` a.equals(null) `应该返回false。
 
