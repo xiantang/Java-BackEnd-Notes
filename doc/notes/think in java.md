@@ -928,3 +928,85 @@ Java范型是使用擦除来实现的，这意味着当你使用范型的时候�
 在编写类的时候，提醒自己"拥有范型的对象，只是一个Object"
 
 # Java IO 系统
+
+## File类
+
+## 输入和输出
+
+流：代表有能力产出数据的数据源对象或者是有能力接受数据的接收端对象。
+
+## InputStream类型 
+InputString 的作用是用来表示从不同数据源产生的输入的类
+
+* 字节数组
+* String对象
+* 文件
+* 管道 
+* 一个由其他种类的流组成的序列
+* 其他数据源
+
+## OutputStream类型  
+决定了数据要去往的地方:
+* 字节数组
+* 文件
+* 管道 
+
+## 缓冲输入文件
+
+
+```java
+public class BufferedInputFile {
+    public static String
+    read(String filename) throws IOException {
+        BufferedReader in = new BufferedReader(new FileReader(filename));
+        String s;
+        StringBuilder sb = new StringBuilder();
+        while ((s = in.readLine()) != null) {
+            sb.append(s + "\n");
+        }
+        in.close();
+        return sb.toString();
+    }
+
+    public static void main(String[] args) throws IOException{
+        System.out.println(read("ThinkingInJava.iml"));
+    }
+}
+```
+
+## 从内存输入
+
+StringReader是面向字符的读取 
+
+## 格式化内存输入
+
+```java
+public class FormattedMemoryInput {
+    public static void main(String[] args) throws IOException {
+        try {
+            DataInputStream in = new DataInputStream(
+                    new ByteArrayInputStream(
+                            BufferedInputFile.read("ThinkingInJava.iml").getBytes()
+                    )
+            );
+            while (true) {
+                System.out.print((char)in.readByte());
+            }
+        } catch (EOFException e) {
+            System.out.println("End of steam");
+        }
+    }
+}
+
+```
+
+## 对象序列化
+
+当你创建对象的时候，只要你需要，它就会一直存在。
+轻量级持久性:持久性意味着一个对象的生命周期不取决于程序是否正在执行。
+对象序列化特别聪明的地方是不仅保存了对象的全景图，而且能追踪对象包含的所有引用。
+
+## 寻找类
+如果还原的过程中，类文件不在路径中，就会得到一个ClassNotFoundException异常。
+
+## 序列化控制 
