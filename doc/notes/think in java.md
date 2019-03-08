@@ -1009,4 +1009,5 @@ public class FormattedMemoryInput {
 ## 寻找类
 如果还原的过程中，类文件不在路径中，就会得到一个ClassNotFoundException异常。
 
-## 序列化控制 
+## transient（瞬时）关键字
+意思是不用麻烦你保存或者恢复数据--我自己会处理
