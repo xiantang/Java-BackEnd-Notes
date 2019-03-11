@@ -1011,3 +1011,34 @@ public class FormattedMemoryInput {
 
 ## transient（瞬时）关键字
 意思是不用麻烦你保存或者恢复数据--我自己会处理
+
+
+# 枚举类型
+## 基本的enum特性
+
+* ordinal() 返回int 指的是定义的顺序。
+* Enum类实现了Comparable接口，具有compareTo()方法。
+* 同时实现类Serializable接口。
+* valueOf()是在enum中定义static方法，给定名字返回给定实例。
+
+## 向enum中添加方法
+
+## values()的神秘之处
+
+values() 是通过编译期后期插入的static方法 
+
+
+# 注解
+
+优点:
+* 编译期检查
+* 干净的易读的代码
+
+## 基本语法
+
+定义注解 ：
+注解和Java其他接口一样，可以被编译成为.class文件
+
+* @Target 定义你的注解将要运用在什么地方
+* @Rectetion 定义在哪个级别可用 类文件(CLASS),运行时(RUNTIME),源代码(SOURCE)
+
