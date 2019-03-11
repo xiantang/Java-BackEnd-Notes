@@ -1039,13 +1039,11 @@ values() 是通过编译期后期插入的static方法
 定义注解 ：
 注解和Java其他接口一样，可以被编译成为.class文件
 标准注解:
-
-
 * @Override
 * @Deprecated  注解了元素会发出警告
 * SuppressWarnings 关闭不当的编译器警告
 
-
+元注解:
 * @Target 定义你的注解将要运用在什么地方
 * @Rectetion 定义在哪个级别可用 
     * 类文件(CLASS)Class文件有用VM丢弃
@@ -1060,3 +1058,95 @@ values() 是通过编译期后期插入的static方法
 * String
 * Class
 * Annotation
+* 以上类型的数组
+
+如果有其他类型，编译期就会报错
+默认值不能设置为null
+
+## 生成外部文件
+
+```java
+package annotations.databases;
+
+import annotations.DBTable;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TableCreator {
+    public static void main(String[] args) throws ClassNotFoundException {
+//        System.out.println(args[0]);
+//        if (args.length < 1) {
+//            System.out.println("arguments: annotated classes");
+//            System.exit(0);
+//        }
+//        for (String className : args
+//        ) {
+            // 获取指定类对象
+        Class<?> cl = Member.class;
+        // 获取类对象的注解
+        DBTable dbTable = cl.getAnnotation(DBTable.class);
+        if (dbTable == null) {
+            System.out.println("no dbtable annotations in class "+"Member");
+        }
+        String tableName = dbTable.name();
+//        System.out.println(tableName);
+//        }
+        List<String> columDefs = new ArrayList<>();
+        for (Field field : cl.getDeclaredFields()
+        ) {
+            String columnName = null;
+            Annotation[] anns = field.getDeclaredAnnotations();
+            if (anns.length < 1) { // 不是tableString
+                continue;
+            }
+            if (anns[0] instanceof SQLInteger) {
+                SQLInteger sInt = (SQLInteger) anns[0];
+                if (sInt.name().length() < 1) {
+                    columnName = field.getName().toUpperCase();
+                }
+                else
+                    columnName = sInt.name();
+                columDefs.add(columnName + " INT" + getConstraints(sInt.constraints()));
+            }
+            if (anns[0] instanceof SQLString) {
+                SQLString sString = (SQLString) anns[0];
+                if (sString.name().length() < 1) {
+                    columnName = field.getName().toUpperCase();
+                }
+                else
+                    columnName = sString.name();
+                columDefs.add(columnName + " VARCHAR(" + sString.value()+")"+getConstraints(sString.constraints()));
+            }
+            StringBuilder createdCommand = new StringBuilder(
+                    "CREATE TABLE " + tableName + "("
+            );
+            for (String columDef : columDefs
+            ) {
+                createdCommand.append("\n   " + columDef + ",");
+            }
+            String tableCreate = createdCommand.substring(
+                    0, createdCommand.length() - 1
+            ) + ");";
+            System.out.println(tableCreate);
+        }
+    }
+    private static String getConstraints(Constraints con) {
+        String constraints = "";
+        if (!con.allowNull()) {
+            constraints += " NOT NULL";
+        }
+        if (con.primaryKey()) {
+            constraints += " PRIMARY KEY";
+        }
+        if (con.unique()) {
+            constraints += " UNIQUE";
+        }
+        return constraints;
+    }
+}
+
+```
