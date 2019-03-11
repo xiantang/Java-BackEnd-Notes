@@ -1038,7 +1038,25 @@ values() 是通过编译期后期插入的static方法
 
 定义注解 ：
 注解和Java其他接口一样，可以被编译成为.class文件
+标准注解:
+
+
+* @Override
+* @Deprecated  注解了元素会发出警告
+* SuppressWarnings 关闭不当的编译器警告
+
 
 * @Target 定义你的注解将要运用在什么地方
-* @Rectetion 定义在哪个级别可用 类文件(CLASS),运行时(RUNTIME),源代码(SOURCE)
+* @Rectetion 定义在哪个级别可用 
+    * 类文件(CLASS)Class文件有用VM丢弃
+    * 运行时(RUNTIME)可以通过反射读取信息
+    * 源代码(SOURCE)将被编译器丢弃
 
+标记注解:(marker annotation)没有元素的注解
+
+## 注解元素
+
+* 所有类型
+* String
+* Class
+* Annotation
