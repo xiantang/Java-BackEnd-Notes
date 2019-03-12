@@ -1163,3 +1163,42 @@ Java的线程机制是抢占式的，这表示调度机制会周期的中断�
 ## 定义任务 
 
 Thread.yield() 表示对线程的调度器（让CPU从一个线程转换到另一个线程)
+
+垃圾回收的时候 因为Thread 注册了自己，在run()并且死亡之前，垃圾回收器无法回收它
+
+## 使用Executor 
+
+* CacheThreadPool 为每个任务都创建一个线程
+* FixedThreadPool 一次性预先执行代价高昂的线程分配 `Executors.newFixedThreadPool(5);`
+* FixedThreadPool 希望在另一个线程中连续运行的任务，如果提交了多个任务，这些任务将会排队。 会首先初始化线程，然后依次执行，死亡。
+
+## 从任务中产生返回值
+
+## 休眠
+```java
+public class SleepTask extends LIftOff {
+    @Override
+    public void run() {
+        try {
+            while (countDown-- > 0) {
+                System.out.print(status());
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+        } catch (InterruptedException e) {
+//            e.printStackTrace();
+            System.err.println("Interrupted");
+        }
+
+
+    }
+
+    public static void main(String[] args) {
+        ExecutorService exec = Executors.newCachedThreadPool();
+        for (int i = 0; i < 5; i++) {
+            exec.execute(new SleepTask());
+        }
+        exec.shutdown();
+    }
+}
+```
+对于sleep()的调用会抛出`InterruptedException`异常，并且能可以看到，run()中被捕获，不会垮线程传播回main()
