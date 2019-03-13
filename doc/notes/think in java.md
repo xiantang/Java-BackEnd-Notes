@@ -1199,3 +1199,50 @@ public class SleepTask extends LIftOff {
 }
 ```
 对于sleep()的调用会抛出`InterruptedException`异常，并且能可以看到，run()中被捕获，不会垮线程传播回main()
+
+## 后台线程
+
+不属于程序中不可或缺的部分。非后台线程结束时，程序也就终止了。
+只要任何非后台线程还在运行，程序就不会终止。
+
+后台线程工厂类
+
+```java
+public class DaemonThreadFactory implements ThreadFactory {
+    @Override
+    public Thread newThread(Runnable r) {
+        Thread t = new Thread(r);
+        t.setDaemon(true);
+        return t;
+    }
+}
+```
+
+```java
+public class DaemonFromFactory implements Runnable {
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(100);
+                System.out.println(Thread.currentThread() + " " + this);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        // 创建方法重载为接受一个ThreadFactory 而这个对象用来创建新的线程
+        ExecutorService exec = Executors.newCachedThreadPool(new DaemonThreadFactory());
+        for (int i = 0; i < 10; i++) {
+            exec.execute(new DaemonFromFactory());
+        }
+        System.out.println("All daemons started");
+        TimeUnit.MILLISECONDS.sleep(500);
+
+    }
+}
+```
+
+一旦main()推出JVM就会关闭所有后台进程，非后台的Executor 通常是更好的选择，因为可以控制任务同时关闭
