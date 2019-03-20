@@ -1394,3 +1394,10 @@ class BetterWait implements Runnable {
 ```
 
 将一个线程首先wait()等到变成true就在主线程对这个线程 notify()
+
+### notify() 与 notifyAll()
+
+notify() 当条件发生变化，必须只有一个任务能够受益。
+
+## 死锁 
+某个任务在等待一个任务，而后者又等待其他任务，一直下去得到一个互相等待的循环。
