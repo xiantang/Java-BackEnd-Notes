@@ -1166,11 +1166,52 @@ Thread.yield() 表示对线程的调度器（让CPU从一个线程转换到另
 
 垃圾回收的时候 因为Thread 注册了自己，在run()并且死亡之前，垃圾回收器无法回收它
 
-## 使用Executor 
+## 使用Executor 线程池
 
 * CacheThreadPool 为每个任务都创建一个线程
 * FixedThreadPool 一次性预先执行代价高昂的线程分配 `Executors.newFixedThreadPool(5);`
 * FixedThreadPool 希望在另一个线程中连续运行的任务，如果提交了多个任务，这些任务将会排队。 会首先初始化线程，然后依次执行，死亡。
+
+当任务都是同类型并且相对独立的时候，线程池的性能才能达到最佳。
+
+### 设置线程池的大小
+* 过大，大量的线程在相对很少的CPU和内存资源上发生竞争。
+* 过小，将导致许多空闲的处理器无法执行工作，从而降低吞吐率。
+
+
+
+### 管理队列任务
+ThreadPoolExecutor 允许提供一个BlockingQueue 来保存等待执行的任务
+
+* 有界队列
+    有助于避免资源耗尽的情况发生：
+    * ArrayBlockingQueue
+    * LinkedBlockingQueue
+    * PriorityBlockingQueue   
+    但是队列填满怎么办？
+    使用**饱和策略**
+* 无界队列
+* 同步移交(Synchronous Handoff)队列
+    对于非常大的或者无界的线程池，使用SynchronousQueue来避免任务排队,SynchronousQueue不是一个真正的队列，而是一种线程之间的移交机制。
+    ```java
+    /**
+     * Adds the specified element to this queue, waiting if necessary for
+     * another thread to receive it.
+     *
+     * @throws InterruptedException {@inheritDoc}
+     * @throws NullPointerException {@inheritDoc}
+     */
+    public void put(E e) throws InterruptedException {
+        if (e == null) throw new NullPointerException();
+        if (transferer.transfer(e, false, 0) == null) {
+            Thread.interrupted();
+            throw new InterruptedException();
+        }
+    }
+    ```
+
+## 饱和策略
+
 
 ## 从任务中产生返回值
 
@@ -1251,10 +1292,14 @@ public class DaemonFromFactory implements Runnable {
 
 A 线程在B线程 上调用B.join()指的是等待B线程结束，如果B线程中断，则运行A线程。 
 
-## 异常
+## 内置锁
+synchronized 块必须在给定一个在其上同步的对象，最合理的方式是
+使用当前对象，synchronized(this)，如果获取了synchronized块上的
+锁，那么改对象其他synchronized 方法和临界区就不能被调用类。
 
-## 共享受限资源
-
+同步代码块(Synchronized Block)
+每个Java对象都可以用来实现一个同步的锁，这些锁叫做内置锁(Intrinsic Lock)或监视器锁(Monitor Lock)
+**是对象内部的锁** 然后线程去获取。。。
 ### 解决共享资源竞争
 
 Java提供关键字synchronized 当任务执行被synchronized关键子保护的代码的时候，检查锁是否可用，获取锁，执行代码，释放锁。
@@ -1267,6 +1312,15 @@ Java提供关键字synchronized 当任务执行被synchronized关键子保护�
 
 
 每个访问临界共享资源的方法都必须同步，否则他们就不会正常工作。
+### 重入
+线程调用自己已经获取的锁的时候，这个请求就会成功 
+意味着锁的操作粒度是`线程`，而不是`调用`
+
+## 异常
+
+## 共享受限资源
+
+
 
 ### 显式Lock对象
 
@@ -1277,6 +1331,11 @@ Java提供关键字synchronized 当任务执行被synchronized关键子保护�
 除了long和double以外所有基本类型上的”基本操作“。
 JVM将long和double读取和写入操作发生上下文切换，从而导致不同任务可以得到不正确的操作（字撕裂）
 
+Q:为什么要在访问某个共享并且可变的变量的时候要求线程在同一个锁上同步
+A:为了确保某个线程写入变量的值对于其他的线程是可见的,如果一个线程在未持有正确锁的情况下读取某个变量，那么读到的可能是一个失效的值。
+![](../images/vo.png)
+
+* 有序性: 编译器与运行的时候会注意到这个变量是共享的，所以不会将该变量上的操作与其他内存操作一起重排序。volatile 变量不会缓存到在寄存器或者其他处理器不可见的地方。
 * 保证原子性： 定义long和double变量的时候使用volatile关键字，获得简单赋值和返回操作的原子性。 
 * 避免使用原子操作替代同步
 * 可视性：一个任务作出的更改，即使在不中断的意义上讲是原子性的，
@@ -1289,11 +1348,7 @@ JVM将long和double读取和写入操作发生上下文切换，从而导致不�
 
 ## 原子类   
 
-## 临界区 
 
-synchronized 块必须在给定一个在其上同步的对象，最合理的方式是
-使用当前对象，synchronized(this)，如果获取了synchronized块上的
-锁，那么改对象其他synchronized 方法和临界区就不能被调用类。
 
 ## 线程本地存储 
 
@@ -1323,6 +1378,15 @@ void interruptIfStarted() {
             }
         }
 ```
+## 饱和策略 
+有界队列被填满后，饱和策略开始发挥作用
+饱和策略可以通过调用`setRejectedExecutionHandler`来修改
+
+* Abort  中止 默认的饱和策略，调用者可以捕获这个异常，根据需求编写自己的处理代码。
+* Discard 抛弃策略 会悄悄抛弃任务
+* Discard-Oldest 会抛弃下一个被执行的任务，尝试重新提交新的任务
+* Caller-Runs 策略 实现一种调节机制
+
 ## 线程之间的协作
 
 ### wait() 与 notifyAll()
@@ -1396,7 +1460,7 @@ class BetterWait implements Runnable {
 将一个线程首先wait()等到变成true就在主线程对这个线程 notify()
 
 ### notify() 与 notifyAll()
-
+    
 notify() 当条件发生变化，必须只有一个任务能够受益。
 
 ## 死锁 
