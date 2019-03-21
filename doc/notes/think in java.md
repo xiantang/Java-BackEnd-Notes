@@ -810,10 +810,10 @@ Set具有Collection完全一样的接口，没有任何额外的功能。
 
 * TreeSet 采用红黑树的数据结构排序元素。
 * HashSet 采用散列函数，目的是快速查找元素
-* LinkedHashSet 内部使用散列加快查询速度，同时使用链表维护次序，使得元素看上去是以插入的顺序保存的。
+* LinkedHashSet 内部使用散列加快查询速度，同时使用链表维护次序，使得元素看上去是以插入的顺序保存的。
 
 ## SortedSet
-* 使用SortSet(TreeSet是其唯一的实现),可以确保元素处于排序的状态，还可以使用SortedSet 接口提供的额外功能。
+* 使用SortSet(TreeSet是其唯一的实现),可以确保元素处于排序的状态，还可以使用SortedSet 接口提供的额外功能。
 * Comparator comparator()： 返回当前 Set 使用的 Comparator，或者返回 null，表示以自然方式排序。
 * Object first()：返回容器中的第一个元素。 Object last()：返回容器中的最末一个元素。 SortedSet subSet(fromElement, toElement): 生成此 Set 的子集，范围 从 fromElement（包含）到 toElement（不包含）。
 * SortedSet headSet(toElement): 生成此 Set 的子集，由小于 toElement 的 元素组成。
@@ -828,14 +828,14 @@ HashMap 基于散列表的实现（取代Hashtable）插入和查询 键值对�
 * 默认的Object.equals() 只是比较对象的地址，如果使用自己的类作为
 
 自建对象为何要同时重写equal()和hashCode()
-hashCode 是生成你一个整型的值，该整形被处理后，作为数组下标放入Entry，equal() 方法是用来插入或者查询的时候在插入值和数组中的散列码比较相等之后，进行equal比较。
+hashCode 是生成你一个整型的值，该整形被处理后，作为数组下标放入Entry，equal() 方法是用来插入或者查询的时候在插入值和数组中的散列码比较相等之后，进行equal比较。
 
 为解决数组容量被固定的问题，不同的键可以产生相同的下标。可能会有冲突。
 
 ## 覆盖HashCode 
-设计HashCode()时最重要因素，无论何时，同一个对象调用hashCode()都应该生成相同的值
+设计HashCode()时最重要因素，无论何时，同一个对象调用hashCode()都应该生成相同的值
 
-不应该使hashCode()依赖具有唯一性质的对象信息，尤其是使用this的值。
+不应该使hashCode()依赖具有唯一性质的对象信息，尤其是使用this的值。
 
 
 ## 选择接口的不同实现
@@ -915,19 +915,19 @@ public class CanonicalMapping {
 ## 一个堆栈类
 
 ## 范型方法
-是否拥有范型方法，与是否是范型类没有任何关系。 
+是否拥有范型方法，与是否是范型类没有任何关系。 
 如果调用范型方法传入的是基本类型，自动打包机制会介入其中，将基本类型的值包装成为对应的对象。
 
 ## 杠杆利用类型参数推断
 
 ## 范型的擦除
 Java范型是使用擦除来实现的，这意味着当你使用范型的时候，任何具体类型信息
-都会被擦除，你唯一知道的就是你在使用一个对象。
+都会被擦除，你唯一知道的就是你在使用一个对象。
 
-范型只有在静态检查类型的时期才会出现，在此之后所有的范型类型都会被擦除。
+范型只有在静态检查类型的时期才会出现，在此之后所有的范型类型都会被擦除。
 在编写类的时候，提醒自己"拥有范型的对象，只是一个Object"
 
-# Java IO 系统
+# Java IO 系统
 
 ## File类
 
@@ -949,7 +949,7 @@ InputString 的作用是用来表示从不同数据源产生的输入的类
 决定了数据要去往的地方:
 * 字节数组
 * 文件
-* 管道 
+* 管道 
 
 ## 缓冲输入文件
 
@@ -1003,11 +1003,11 @@ public class FormattedMemoryInput {
 ## 对象序列化
 
 当你创建对象的时候，只要你需要，它就会一直存在。
-轻量级持久性:持久性意味着一个对象的生命周期不取决于程序是否正在执行。
-对象序列化特别聪明的地方是不仅保存了对象的全景图，而且能追踪对象包含的所有引用。
+轻量级持久性:持久性意味着一个对象的生命周期不取决于程序是否正在执行。
+对象序列化特别聪明的地方是不仅保存了对象的全景图，而且能追踪对象包含的所有引用。
 
 ## 寻找类
-如果还原的过程中，类文件不在路径中，就会得到一个ClassNotFoundException异常。
+如果还原的过程中，类文件不在路径中，就会得到一个ClassNotFoundException异常。
 
 ## transient（瞬时）关键字
 意思是不用麻烦你保存或者恢复数据--我自己会处理
@@ -1158,32 +1158,32 @@ public class TableCreator {
 
 ## 改进代码设计  
 
-Java的线程机制是抢占式的，这表示调度机制会周期的中断线程，上下文切换到下一个线程。
+Java的线程机制是抢占式的，这表示调度机制会周期的中断线程，上下文切换到下一个线程。
 
 ## 定义任务 
 
-Thread.yield() 表示对线程的调度器（让CPU从一个线程转换到另一个线程)
+Thread.yield()表示对线程的调度器（让CPU从一个线程转换到另一个线程)
 
-垃圾回收的时候 因为Thread 注册了自己，在run()并且死亡之前，垃圾回收器无法回收它
+垃圾回收的时候 因为Thread 注册了自己，在run()并且死亡之前，垃圾回收器无法回收它
 
 ## 使用Executor 线程池
 
 * CacheThreadPool 为每个任务都创建一个线程
 * FixedThreadPool 一次性预先执行代价高昂的线程分配 `Executors.newFixedThreadPool(5);`
-* FixedThreadPool 希望在另一个线程中连续运行的任务，如果提交了多个任务，这些任务将会排队。 会首先初始化线程，然后依次执行，死亡。
+* FixedThreadPool 希望在另一个线程中连续运行的任务，如果提交了多个任务，这些任务将会排队。 会首先初始化线程，然后依次执行，死亡。
 
-当任务都是同类型并且相对独立的时候，线程池的性能才能达到最佳。
+当任务都是同类型并且相对独立的时候，线程池的性能才能达到最佳。
 
 ### 设置线程池的大小
-* 过大，大量的线程在相对很少的CPU和内存资源上发生竞争。
-* 过小，将导致许多空闲的处理器无法执行工作，从而降低吞吐率。
+* 过大，大量的线程在相对很少的CPU和内存资源上发生竞争。
+* 过小，将导致许多空闲的处理器无法执行工作，从而降低吞吐率。
 
 
 
 ### 管理队列任务
 ThreadPoolExecutor 允许提供一个BlockingQueue 来保存等待执行的任务
 
-* 有界队列
+* 有界队列
     有助于避免资源耗尽的情况发生：
     * ArrayBlockingQueue
     * LinkedBlockingQueue
@@ -1191,7 +1191,7 @@ ThreadPoolExecutor 允许提供一个BlockingQueue 来保存等待执行的任�
     但是队列填满怎么办？
     使用**饱和策略**
 * 无界队列
-* 同步移交(Synchronous Handoff)队列
+* 同步移交(Synchronous Handoff)队列
     对于非常大的或者无界的线程池，使用SynchronousQueue来避免任务排队,SynchronousQueue不是一个真正的队列，而是一种线程之间的移交机制。
     ```java
     /**
@@ -1295,12 +1295,22 @@ A 线程在B线程 上调用B.join()指的是等待B线程结束，如果B线�
 ## 内置锁
 synchronized 块必须在给定一个在其上同步的对象，最合理的方式是
 使用当前对象，synchronized(this)，如果获取了synchronized块上的
-锁，那么改对象其他synchronized 方法和临界区就不能被调用类。
+锁，那么该对象其他synchronized 方法和临界区就不能被调用类。
+
+### 三种应用方式
+* 修饰实例方法：进入同步代码块之前要获得当前实例的锁
+* 修饰静态方法: 进入同步代码快之前要获得当前类对象的锁    
+    当用于对象的锁的时候
+* 修饰代码块：进入同步代码块之前要获得给定对象的锁
+
 
 同步代码块(Synchronized Block)
-每个Java对象都可以用来实现一个同步的锁，这些锁叫做内置锁(Intrinsic Lock)或监视器锁(Monitor Lock)
+每个Java对象都可以用来实现一个同步的锁，这些锁叫做内置锁(Intrinsic Lock)或监视器锁(Monitor Lock)
 **是对象内部的锁** 然后线程去获取。。。
-### 解决共享资源竞争
+
+
+
+### 解决共享资源竞争
 
 Java提供关键字synchronized 当任务执行被synchronized关键子保护的代码的时候，检查锁是否可用，获取锁，执行代码，释放锁。
 
@@ -1332,20 +1342,139 @@ JVM 采用两个字存储对象头（数组分配三个字，多一个字来记�
 
 主结构主要是由 Mark Word 和ClassMetadata Address组成
 ![](https://blog.csdn.net/javazejian/article/details/72828483)
+
+每个对象都存在着一个monitor 与之关联，当一个monitor被某个线程持有后，便就处于锁定状态。
+monitor由ObjectMonitor实现 C++源码如下
+```C++
+ObjectMonitor() {
+    _header       = NULL;
+    _count        = 0; //记录个数
+    _waiters      = 0,
+    _recursions   = 0;
+    _object       = NULL;
+    _owner        = NULL;
+    _WaitSet      = NULL; //处于wait状态的线程，会被加入到_WaitSet
+    _WaitSetLock  = 0 ;
+    _Responsible  = NULL ;
+    _succ         = NULL ;
+    _cxq          = NULL ;
+    FreeNext      = NULL ;
+    _EntryList    = NULL ; //处于等待锁block状态的线程，会被加入到该列表
+    _SpinFreq     = 0 ;
+    _SpinClock    = 0 ;
+    OwnerIsThread = 0 ;
+  }
+```
+ObjectMonitor 有两个队列 _WaitSet 和 _EntryList
+保存ObjectWaiter 对象列表 等待锁的线程都会被封装成为ObjectWaiter 对象
+* 多线程访问同一段同步代码的时候，会首先进入_EntryList，当线程获得对象进入_Owner区域，_Owner变量设置为当前线程同时_count 数目加一。
+* 线程调用wait()方法释放持有的monitor，owner变量恢复为 `null`,count--，进入_WaitSet等待被唤醒。
+* 线程执行完毕将释放monitor 并复位变量的值，方便其他线程获取monitor。
+
+![](https://img-blog.csdn.net/20170604114223462?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvamF2YXplamlhbg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+### 代码块底层原理
+反编译synchronized 同步代码块
+
+
+```java
+public class SyncCodeBlock {
+
+   public int i;
+
+   public void syncTask(){
+       //同步代码库
+       synchronized (this){
+           i++;
+       }
+   }
+}
+```
+主要看看syncTask
+
+```java
+public void syncTask();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=3, locals=3, args_size=1
+         0: aload_0
+         1: dup
+         2: astore_1
+         3: monitorenter  //注意此处，进入同步方法
+         4: aload_0
+         5: dup
+         6: getfield      #2             // Field i:I
+         9: iconst_1
+        10: iadd
+        11: putfield      #2            // Field i:I
+        14: aload_1
+        15: monitorexit   //注意此处，退出同步方法
+        16: goto          24
+        19: astore_2
+        20: aload_1
+        21: monitorexit //注意此处，退出同步方法
+        22: aload_2
+        23: athrow
+        24: return
+      Exception table:
+      //省略其他字节码.......
+}
+
+```
+值得注意的是编译器将会确保方法通过何种方式完成，每个 monitorenter 都会执行对应 monitorexit 指令，为了保证异常完成时候，相互配对，所以编译器会自动产生一个异常处理器，目的就是来执行monitorexit指令。
+
+
+## Java 虚拟机对synchronized 的优化
+
+* 偏向锁
+* 轻量级锁
+* 自旋锁
+* 锁消除
+
+## 锁优化
+高效并发是JDK1.5-1.6 的一个重要改进
+
+* Adaptive Spinning 适应性自旋
+* Lock Elimination 锁消除
+* Lock Coarsening 锁粗化
+* Lightweight Locking 轻量锁
+* Biased Locking 偏向锁
+
+### 自旋锁和适应性自旋
+锁的升级:
+偏向锁->轻量级锁->重量级锁
+### 偏向锁
+如果一个线程获得了锁，那么锁就会进入偏向模式，Mark Word
+结构就会变成偏向锁结构，当这个线程再次请求锁的时候，就不需要
+进行任何同步操作，就是获取锁的过程，省去了大量申请锁的操作。
+
+### 轻量级锁
+轻量级锁能够提升程序性能的依据是“对绝大部分的锁，在整个同步周期内都不存在竞争”,轻量级锁所适应的场景是线程交替执行同步块的场合.
+
+### 自旋锁
+
+看看持有锁的线程是否很快可以释放锁，我们需要让线程执行一个忙循环，
+这项技术就是就是所谓的自旋锁。
+
+* JDK1.4.2引入，默认关闭，使用-XX:+UseSpinning 参数就可以开启
+* JDK1.6 默认开启
+如果自旋超过了限定的次数仍然没有成功获取锁，就会采用传统的方式挂起线程。
+
 ## 显式Lock对象
 
 显示的Lock对象在加锁和释放方面，对于内建的synchronized锁来说来赋予你更细粒度的控制力。
 
 与内置锁的不同点:
-* 无条件
+* 无条件
 * 可轮询
-* 定时的可以中断的锁获取操作
+* 定时的可以中断的锁获取操作
 * 显示加锁
 
 
 解决了 synchronized 的不足:
-* 中断一个正在等待获取锁的线程
-* 利用可定时，可轮询的锁避免了死锁的发生
+* 中断一个正在等待获取锁的线程
+* 利用可定时，可轮询的锁避免了死锁的发生
 
 
 ### 公平性
