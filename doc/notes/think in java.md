@@ -1445,14 +1445,16 @@ public void syncTask();
 锁的升级:
 偏向锁->轻量级锁->重量级锁
 ### 偏向锁
+偏向锁就是在无竞争的情况下的同步原语，在无竞争的情况下把整个同步操作消除。
 如果一个线程获得了锁，那么锁就会进入偏向模式，Mark Word
 结构就会变成偏向锁结构，当这个线程再次请求锁的时候，就不需要
 进行任何同步操作，就是获取锁的过程，省去了大量申请锁的操作。
 
+
 ### 轻量级锁
 轻量级锁能够提升程序性能的依据是“对绝大部分的锁，在整个同步周期内都不存在竞争”,轻量级锁所适应的场景是线程交替执行同步块的场合.
 
-### 自旋锁
+### 自旋锁和自适应自旋
 
 看看持有锁的线程是否很快可以释放锁，我们需要让线程执行一个忙循环，
 这项技术就是就是所谓的自旋锁。
@@ -1460,6 +1462,64 @@ public void syncTask();
 * JDK1.4.2引入，默认关闭，使用-XX:+UseSpinning 参数就可以开启
 * JDK1.6 默认开启
 如果自旋超过了限定的次数仍然没有成功获取锁，就会采用传统的方式挂起线程。
+
+自适应自旋
+
+自适应意味着自旋的时间不再固定，而是由**前一次在同一个锁上的自旋时间**
+以及**锁拥有者的状态决定**。
+
+* 对于一个锁对象自旋等待刚刚成功获得过锁，并且持有锁的线程正在运行，那么虚拟机就会认为很有可能获得锁，就会允许自旋等待延长。
+* 对于一个锁对象如果很少成功获得锁，以后获取这个锁就会省略自旋过程。
+
+### 锁消除 
+
+```java
+public String concatString(String s1, String s2, String s3) {
+        return s1 + s2 + s3;
+       
+    }
+```
+在JDK1.5以及以后的版本会被优化为StringBuilder的连续append()操作。
+
+```java
+public java.lang.String concatString(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #2                  // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #3                  // Method java/lang/StringBuilder."<init>":()V
+       7: aload_1
+       8: invokevirtual #4                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      11: aload_2
+      12: invokevirtual #4                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      15: aload_3
+      16: invokevirtual #4                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      19: invokevirtual #5                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+```
+在JDK1.5之前采用的是StringBuffer。
+首先编译器会观察sb对象，然后发现他的动态作用域就在方法内部，也就是说sb对象的引用是不会`逃逸`到concatString()方法外部也就是其他线程无法访问到他。虽然有锁但是可以被很安全的消除掉。
+
+### 轻量级锁
+对象实例由对象头、实例数据组成，其中对象头包括markword和类型指针，如果是数组，还包括数组长度。    
+HotSpot 虚拟机的对象头：
+| 类型 | 32位JVM  | 64位JVM |  
+|---| ----- | -------- | 
+|markword| 32bit | 64bit | 
+|类型指针| 32bit | 64bit，开启指针压缩时为32bit  |
+| 数组长度 | 32bit |32bit |
+
+对象头的markword:
+![](https://img-blog.csdnimg.cn/20190115142040348.png)
+
+
+轻量级锁操作之前的堆栈与对象的状态:
+![](https://images2015.cnblogs.com/blog/820406/201604/820406-20160424105442866-2111954866.png)
+
+当代码进入同步块的时候，如果同步对没有锁定(标志位为01)首先虚拟机会将当前线程的栈帧中简历一个名为锁记录的空间，拷贝指定对象的markword。
+![](https://images2015.cnblogs.com/blog/820406/201604/820406-20160424105540163-1019388398.png)
+然后尝试将对象的markword更新指向LockRecord的指针。
+如果更新操作失败，虚拟机会首先检查MarkWord是否指向当前线程的栈，如果只说明当前线程拥有了这个对象的锁，就可以直接进入同步块操作。不然就说明这个锁对象已经被其他线程抢占了。否则这个锁对象已经被其他线程抢占了。
+
+
 
 ## 显式Lock对象
 
