@@ -1486,7 +1486,7 @@ HotSpot 虚拟机的对象头：
 自适应意味着自旋的时间不再固定，而是由**前一次在同一个锁上的自旋时间**
 以及**锁拥有者的状态决定**。
 
-* 对于一个锁对象自旋等待刚刚成功获得过锁，并且持有锁的线程正在运行，那么虚拟机就会认为很有可能获得锁，就会允许自旋等待延长。
+* 对于一个锁对象自旋等待刚刚成功获得过锁，并且持有锁的线程正在运行，那么虚拟机就会认为很有可能获得锁，就会允许自旋等待延长。
 * 对于一个锁对象如果很少成功获得锁，以后获取这个锁就会省略自旋过程。
 
 ### 锁消除 
@@ -1497,7 +1497,7 @@ public String concatString(String s1, String s2, String s3) {
        
     }
 ```
-在JDK1.5以及以后的版本会被优化为StringBuilder的连续append()操作。
+在JDK1.5以及以后的版本会被优化为StringBuilder的连续append()操作。
 
 ```java
 public java.lang.String concatString(java.lang.String, java.lang.String, java.lang.String);
@@ -1514,7 +1514,7 @@ public java.lang.String concatString(java.lang.String, java.lang.String, java.la
       19: invokevirtual #5                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
 ```
 在JDK1.5之前采用的是StringBuffer。
-首先编译器会观察sb对象，然后发现他的动态作用域就在方法内部，也就是说sb对象的引用是不会`逃逸`到concatString()方法外部也就是其他线程无法访问到他。虽然有锁但是可以被很安全的消除掉。
+首先编译器会观察sb对象，然后发现他的动态作用域就在方法内部，也就是说sb对象的引用是不会`逃逸`到concatString()方法外部也就是其他线程无法访问到他。虽然有锁但是可以被很安全的消除掉。
 
 
 
@@ -1592,13 +1592,13 @@ void interruptIfStarted() {
         }
 ```
 ## 饱和策略 
-有界队列被填满后，饱和策略开始发挥作用
+有界队列被填满后，饱和策略开始发挥作用
 饱和策略可以通过调用`setRejectedExecutionHandler`来修改
 
 * Abort  中止 默认的饱和策略，调用者可以捕获这个异常，根据需求编写自己的处理代码。
-* Discard 抛弃策略 会悄悄抛弃任务
+* Discard 抛弃策略 会悄悄抛弃任务
 * Discard-Oldest 会抛弃下一个被执行的任务，尝试重新提交新的任务
-* Caller-Runs 策略 实现一种调节机制
+* Caller-Runs 策略实现一种调节机制
 
 ## 线程之间的协作
 
@@ -1674,7 +1674,7 @@ class BetterWait implements Runnable {
 
 ### notify() 与 notifyAll()
     
-notify() 当条件发生变化，必须只有一个任务能够受益。
+notify() 当条件发生变化，必须只有一个任务能够受益。
 
 ## 死锁 
-某个任务在等待一个任务，而后者又等待其他任务，一直下去得到一个互相等待的循环。
+某个任务在等待一个任务，而后者又等待其他任务，一直下去得到一个互相等待的循环。

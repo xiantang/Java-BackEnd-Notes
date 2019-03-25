@@ -95,6 +95,34 @@ HotSpot 虚拟机的对象头
 当前线程的栈。如果更新失败就说明这个对象已经被其他线程占用。
 如果有两个线程同时抢夺一个锁，就会将锁的标识变为"10",MarkWord 中存储的就是重量锁(互斥量)的指针，后面等待的线程也要进入阻塞状态。
 
+### 锁的消除
+
+```java
+public String concatString(String s1, String s2, String s3) {
+        return s1 + s2 + s3;
+       
+    }
+```
+在JDK1.5 之后的版本会被优化成为StringBuilder的连续append()
+
+因为对象不会被发布都这个方法之外的区域
+
+```java
+public java.lang.String concatString(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #2                  // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #3                  // Method java/lang/StringBuilder."<init>":()V
+       7: aload_1
+       8: invokevirtual #4                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      11: aload_2
+      12: invokevirtual #4                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      15: aload_3
+      16: invokevirtual #4                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      19: invokevirtual #5                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+```
+也就是所谓的栈封闭，编译器观察sb对象发现这个作用域在方法内部，就是说sb对象的引用是不会`逃逸`到concatString()方法外部。
+
 ## 什么是线程不安全
 线程安全：当多线程访问某个类的时候，这个类始终能表现出正确的行为，就叫做线程安全。
 非线程安全是指多线程操作同一个对象可能会出现问题。
