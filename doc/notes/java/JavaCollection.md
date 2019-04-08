@@ -31,6 +31,20 @@ HashTable 是传统的集合类 已经过时了，在Java4时候被重写了实�
     * HashMap的迭代器是fail-fast的迭代器，但是Hashtable的enumerator迭代器不是fail-fast的。当有其他线程更改了HashMap的结构，就会抛出`ConcurrentModificationException`。由于在同一时刻只有一个线程修改`ConcurrentHashMap`所以不需要抛出这个异常。
     * Hashtable 线程安全使用的是synchronized，因为这个是JVM关键字，是重型操作，所以在单线程下还是HashMap效率高。`ConcurrentHashMap`使用的是CAS技术，也就是乐观锁。当多个线程需要修改同一个变量时候只有其中一个线程能更新，其他线程都失败，失败的线程不会挂起，而是告知这次竞赛失败。先获取key的hashCode,如果是空的就初始化，初始化的时候如果`sizeCtl`被修改就直接yield当前线程。![](https://img-blog.csdn.net/20160318105849333) 如果CAS竞赛成功就创建新的table。
 
+### 重写equals() 传什么参
 
 
+1. 自反性：对于任意的引用值x，x.equals(x)一定为true。 
+2.  对称性：对于任意的引用值x 和 y，当x.equals(y)返回true时， 　　y.equals(x)也一定返回true。 
+3. 传递性：对于任意的引用值x、y和ｚ，如果x.equals(y)返回true， 　　并且y.equals(z)也返回true，那么x.equals(z)也一定返回true。 
+4.  一致性：对于任意的引用值x 和 y，如果用于equals比较的对象信息没有被修 　　改，多次调用x.equals(y)要么一致地返回true，要么一致地返回false。 
+5.  非空性：对于任意的非空引用值x，x.equals(null)一定返回false。 
 
+
+### HashMap源码解析
+ HashMap 主要用来存放键值对，它基于哈希表的Map接口实现，是常用的Java集合之一。
+ * JDK1.8 之前由数组和链表组成，链表主要为了解决冲突
+ * JDK1.8 之后在解决hash冲突的时候采取了较大变化，链表长度大于8链表转换为红黑树（log n）。
+
+ JDK1.8转换红黑树
+ ![](https://camo.githubusercontent.com/20de7e465cac279842851258ec4d1ec1c4d3d7d1/687474703a2f2f6d792d626c6f672d746f2d7573652e6f73732d636e2d6265696a696e672e616c6979756e63732e636f6d2f31382d382d32322f36373233333736342e6a7067)

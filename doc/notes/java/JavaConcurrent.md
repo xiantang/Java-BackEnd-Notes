@@ -137,6 +137,11 @@ public java.lang.String concatString(java.lang.String, java.lang.String, java.la
 * 当把一个对象传入给一个外部方法的时候，相当于发布这个对象。
 * 发布一个内部类的实例。
 
+### final域
+
+final域可以确保初始化过程的安全性
+
+
 
 ## 线程池
 
