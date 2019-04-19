@@ -91,19 +91,19 @@ B-Tree 索引的限制：
 下单操作包括3步骤：
 
 1.查询出商品信息
-
+```sql
 select (status,status,version) from t_goods where id=#{id}
-
+```
 2.根据商品信息生成订单
 
 3.修改商品status为2
-
+```sql
 update t_goods 
 
 set status=2,version=version+1
 
 where id=#{id} and version=#{version};
-
+```
  
 
 那么为了使用乐观锁，我们首先修改t_goods表，增加一个version字段，数据默认version值为1。
