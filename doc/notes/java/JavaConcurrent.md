@@ -162,5 +162,10 @@ ThreadPoolExecutor 允许提供一个BlockingQueue 来保存等待执行的任�
 * 无界队列
 * 同步移交(Synchronous Handoff)队列
     对于非常大的或者无界的线程池，使用SynchronousQueue来避免任务排队,SynchronousQueue不是一个真正的队列，而是一种线程之间的移交机制。
-    
-    
+
+## 条件谓词
+
+* 通常都有一个条件谓词
+* 在调用wait之前先测试条件谓词
+* 调用wait的之前测试条件谓词，并且wait中返回时再次进行测试
+* 调用wait notify notifyall 等方法的时候，一定要持有与条件队列相关的锁
