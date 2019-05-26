@@ -34,7 +34,7 @@ public boolean equals  (Object obj)
 
 注:对于任何非空的引用a,` a.equals(null) `应该返回false。
 
-
+ 
 ```Java
 class Geek  
 { 
