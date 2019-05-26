@@ -20,6 +20,6 @@
 ![](https://github.com/hadyang/interview/raw/master/basic/algo/b-.png)
 
 
-### B树 和 B+树的区别
+### B树 和 B+树的区别
 * B+树种所有叶子节点包含了全部关键字，即其他非叶子节点中的关键字包含在叶子节点中，而在B-树中，关键字是不重复的。
 * B+树中所有非叶子节点仅起到索引的作用
