@@ -13,7 +13,7 @@ Java.lang.object 定义了两个非常重要的方法:
 
 语法:
 
-```
+```java
 public boolean equals  (Object obj)
 
 // This method checks if some other Object
@@ -24,7 +24,6 @@ public boolean equals  (Object obj)
 //调用它的Object。
 ```
 
-
 **Object类中一些关于equals()的原则**:如果某个其他对象等于给定对象，则它遵循以下规则：
 
 * 自反性：对于任何引用a,`a.equals(a)`应该返回true。
@@ -34,7 +33,7 @@ public boolean equals  (Object obj)
 
 注:对于任何非空的引用a,` a.equals(null) `应该返回false。
 
- 
+
 ```Java
 class Geek  
 { 

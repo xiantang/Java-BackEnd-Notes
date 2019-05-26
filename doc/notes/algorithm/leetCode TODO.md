@@ -1,5 +1,5 @@
 ## 链表
-* - [x] 1. 链表的必备知识要点(包括基础知识、刷题中使用的STL等知识)
+* - [x] 链表的必备知识要点(包括基础知识、刷题中使用的STL等知识)
 * - [x] 链表逆序(LeetCode 92,206. Reverse Linked List 1,2)
 * - [x] 求两个链表的交点(LeetCode 160. Intersection of Two Linked Lists)
 * - [x] 链表的节点交换(LeetCode 24. Swap Nodes in Pairs)
