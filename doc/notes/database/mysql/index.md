@@ -2,8 +2,8 @@
 
 ### B-Tree 索引 
 InnoDB 使用的是B+Tree   
-![](btree.png)
- 
+![img](../../../images/8394323_1307440587b6WG.jpg)
+
 根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下查找。通过要查找的值来找到合适的指针进入下层节点。
 
 假设有如下数据表
@@ -104,7 +104,7 @@ set status=2,version=version+1
 
 where id=#{id} and version=#{version};
 ```
- 
+
 
 那么为了使用乐观锁，我们首先修改t_goods表，增加一个version字段，数据默认version值为1。
 
