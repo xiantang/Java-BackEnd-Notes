@@ -57,5 +57,5 @@ Other languages:
 
 
 
-[我的博客]([http://xiantang.info](http://xiantang.info/))
+[我的博客](http://xiantang.info/)
 
