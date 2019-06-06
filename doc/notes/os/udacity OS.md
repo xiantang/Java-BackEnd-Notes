@@ -31,3 +31,26 @@ Polices 指的是 how to do
 
 举个例子就是Linux内核的调度器（scheduler），提供了任务调度需要的原语操作和结构，并且实现了多种调度算法。
 
+## Process 
+
+* instance of an executing program
+* Synonymous with "task" or "job"
+
+
+
+A process is like an order of toys
+
+* State of execution
+
+  * program counter
+  * stack
+
+* parts & temporary holding area
+
+  * data. register state, occupies state in memory
+
+* may require special hardware
+
+  * I/O devices
+
+  
