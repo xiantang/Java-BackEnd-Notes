@@ -31,7 +31,9 @@ Polices 指的是 how to do
 
 举个例子就是Linux内核的调度器（scheduler），提供了任务调度需要的原语操作和结构，并且实现了多种调度算法。
 
-## Process 
+## Process
+
+what is a **Process** : state of a program when executing loaded in memory. 
 
 * instance of an executing program
 * Synonymous with "task" or "job"
