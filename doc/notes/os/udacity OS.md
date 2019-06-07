@@ -33,7 +33,7 @@ Polices 指的是 how to do
 
 ## Process
 
-what is a **Process** : state of a program when executing loaded in memory. 
+what is a **Process** : state of a program when executing loaded in memory. (active entity)
 
 * instance of an executing program
 * Synonymous with "task" or "job"
@@ -56,3 +56,19 @@ A process is like an order of toys
   * I/O devices
 
   
+
+what does process look like ？
+
+![1559835354626](../../images/1559835354626.png)
+
+## Process Control Block
+
+![1559887343136](../../images/1559887343136.png)
+
+* PCB created when process is created.
+* certain fields are update when process state changes
+* other fields changed too frequently
+
+
+
+## Context Switch(上下文切换)
