@@ -61,7 +61,7 @@ what does process look like ？
 
 ![1559835354626](../../images/1559835354626.png)
 
-## Process Control Block
+### Process Control Block
 
 ![1559887343136](../../images/1559887343136.png)
 
@@ -71,7 +71,7 @@ what does process look like ？
 
 
 
-## Context Switch(上下文切换)
+### Context Switch(上下文切换)
 
 switching the CPU from the context of one process to the context of another 
 
@@ -81,9 +81,7 @@ switching the CPU from the context of one process to the context of another
   * direct cost : number of cycles for load 2 store instruction 需要重新载入指令 和存储之前的进程控制表 
   * COLD cache ! cache misses! 在这里我的理解是当一个进程占用CPU的时间过长，会使 cache 中大多数数据都属于他，但是如果这个时候中断当前进程，去切换到其他较少执行的进程，会导致缓存无法击中，需要去下一级缓存中查找。
 
-
-
-## Process Lifecycle
+### Process Lifecycle
 
 ![1559889450257](../../images/1559889450257.png)
 
@@ -98,7 +96,7 @@ mechanisms for process creation(创建的机制)
   * replace child image 
   * load new program  and start from first instruction(从头开始执行)
 
-## CPU Schedule
+### CPU Schedule
 
 ![1559890548807](../../images/1559890548807.png)
 
@@ -121,4 +119,41 @@ Useful CPU work = Total processing time/Total time =
 
 
 **timeslice(时间片)** :time `Tp` allocated to a process on the CPU(一个进程在Tp 中所分配的时间)
+
+
+
+### Interact(交互)
+
+Inter-Process Communication:IPC **mechanisms**:
+
+* transfer data/info between address spaces
+* maintain protection and isolation
+* provider flexibility  and performance (提供性能和灵活性)
+
+#### Message passing IPC:
+
+![1559893595269](../../images/1559893595269.png)
+
+* OS provides communication channel,like shared buffer
+
+* Process:
+
+  * write(send)
+  * read(recv)
+
+  messages to/from channel
+
+#### Shared Memory IPC
+
+* OS establishes a shared channel and map it in to each process address spaces
+* Processes directly read/write from this memory
+* OS is out of the way!
+
+## Thread
+
+Thread Vs. Process
+
+![1559923977411](../../images/1559923977411.png)
+
+* 每个Thread 拥有自己的 program counter 指令和程序栈，但是共享代码资源和文件
 
