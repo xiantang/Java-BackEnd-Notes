@@ -72,3 +72,53 @@ what does process look like ？
 
 
 ## Context Switch(上下文切换)
+
+switching the CPU from the context of one process to the context of another 
+
+
+
+* and they are too expensive!
+  * direct cost : number of cycles for load 2 store instruction 需要重新载入指令 和存储之前的进程控制表 
+  * COLD cache ! cache misses! 在这里我的理解是当一个进程占用CPU的时间过长，会使 cache 中大多数数据都属于他，但是如果这个时候中断当前进程，去切换到其他较少执行的进程，会导致缓存无法击中，需要去下一级缓存中查找。
+
+
+
+## Process Lifecycle
+
+![1559889450257](../../images/1559889450257.png)
+
+
+
+mechanisms for process creation(创建的机制)
+
+* fork 
+  * copies the parent PCB into new child PCB
+  * child continues execution at instruction after fork(继续执行下面的指令)
+* EXEC
+  * replace child image 
+  * load new program  and start from first instruction(从头开始执行)
+
+## CPU Schedule
+
+![1559890548807](../../images/1559890548807.png)
+
+CPU scheduler :  A CPU scheduler determines which one of the currently ready processes will be dispatched to the CPU to start running,and how long it should run for.
+
+
+
+* preempt: interrupt and save current context
+* schedule: run scheduler to choose next process
+* dispatch: dispatch process switch into its context
+
+
+
+![1559891328836](../../images/1559891328836.png)
+
+Useful CPU work = Total processing time/Total time = 
+
+(Tp)/(t_sched+Tp)
+
+
+
+**timeslice(时间片)** :time `Tp` allocated to a process on the CPU(一个进程在Tp 中所分配的时间)
+
