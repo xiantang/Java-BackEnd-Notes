@@ -157,3 +157,18 @@ Thread Vs. Process
 
 * 每个Thread 拥有自己的 program counter 指令和程序栈，但是共享代码资源和文件
 
+有了进程为什么要有线程？
+
+* speed up 对于单进程来说，会有更快的速度
+* hot cache  可以重复利用cache 但是既然如此为什么不使用多进程呢？ 因为多进程并发去做的话每个进程都会有自己的地址空间消耗资源。
+* 更加少的资源和线程间通话的代价
+
+
+
+### Benefits of Multithreading: Single CPU or when (# of Threads)>(# of CPUs)
+
+![1559926862813](../../images/1559926862813.png)
+
+* if (t_idle)>2*(t_ctx_switch) 
+  * then context switch to hide idling time 当IO的时候 线程会出现 idle 的情况 但是这个 idle 的情况还是占用 CPU 时间片的，然后 unix 会有一个机制如果这个idle的时间过长 就直接去做上下文切换了 所以也就不存在 idle 的情况
+* t_ctx.switch threads < t_ctx_switch processes 每次切换都有虚拟资源申请 进程间的上下问切换回很慢
