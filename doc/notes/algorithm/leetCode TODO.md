@@ -77,8 +77,8 @@
 * - [x]  深搜题目 (LeetCode 200. Number of Islands) 
 * - [x] 深搜题目 (LeetCode 473. Matchsticks to Square) 
 * - [x] 深搜题目 (LeetCode 491. Increasing Subsequences)
-*  - [ ]  广搜题目 (LeetCode 126,127 Word Ladder 1,2) 
-*  - [ ]  广搜题目 (LeetCode 417. Pacific Atlantic Water Flow) 
+*  - [x]  广搜题目 (LeetCode 126,127 Word Ladder 1,2) 
+*  - [x]  广搜题目 (LeetCode 417. Pacific Atlantic Water Flow) 
 *  - [ ] 广搜题目 (LeetCode 407. Trapping Rain Water II)
 
 ## 动态规划
