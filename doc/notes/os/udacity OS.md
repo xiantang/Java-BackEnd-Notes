@@ -172,3 +172,15 @@ Thread Vs. Process
 * if (t_idle)>2*(t_ctx_switch) 
   * then context switch to hide idling time 当IO的时候 线程会出现 idle 的情况 但是这个 idle 的情况还是占用 CPU 时间片的，然后 unix 会有一个机制如果这个idle的时间过长 就直接去做上下文切换了 所以也就不存在 idle 的情况
 * t_ctx.switch threads < t_ctx_switch processes 每次切换都有虚拟资源申请 进程间的上下问切换回很慢
+
+### Condition Variable
+
+![1560013730504](../../images/1560013730504.png)
+
+这个问题很有意思，也在面试中困扰了我很久
+
+在这里找到了回答
+
+* while 可以保证多线程的情况下 如果是if 当所有消费者都收到信号后，会全部执行到下面的代码 
+* 如果两个线程同时收到唤醒的信号，但是另一个已经获取了锁并改变了list的状态，另外一个线程就会向下执行
+* 无法再次获取锁一旦被唤醒
