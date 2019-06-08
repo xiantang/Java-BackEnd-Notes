@@ -69,14 +69,14 @@
 * - [x]  哈希与字符串综合 (LeetCode 3.Longest Substring Without Repeating Characters) 
 * - [ ] 哈希与字符串综合 (LeetCode 76. Minimum Window Substring) 
 * - [ ]  哈希与字符串综合 (LeetCode 30. Substring with Concatenation of All Words) 
-* - [ ] 字符串题目 (LeetCode 459. Repeated Substring Pattern) 
+* - [x] 字符串题目 (LeetCode 459. Repeated Substring Pattern) 
 * - [ ]  字符串题目 (LeetCode 468. Validate IP Address)
 
 ## 搜索
-* - [ ]  深度优先搜索与广度优先搜索算法 
-* - [ ]  深搜题目 (LeetCode 200. Number of Islands) 
-* - [ ] 深搜题目 (LeetCode 473. Matchsticks to Square) 
-* - [ ] 深搜题目 (LeetCode 491. Increasing Subsequences)
+* - [x]  深度优先搜索与广度优先搜索算法 
+* - [x]  深搜题目 (LeetCode 200. Number of Islands) 
+* - [x] 深搜题目 (LeetCode 473. Matchsticks to Square) 
+* - [x] 深搜题目 (LeetCode 491. Increasing Subsequences)
 *  - [ ]  广搜题目 (LeetCode 126,127 Word Ladder 1,2) 
 *  - [ ]  广搜题目 (LeetCode 417. Pacific Atlantic Water Flow) 
 *  - [ ] 广搜题目 (LeetCode 407. Trapping Rain Water II)
