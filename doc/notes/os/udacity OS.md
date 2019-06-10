@@ -184,3 +184,13 @@ Thread Vs. Process
 * while 可以保证多线程的情况下 如果是if 当所有消费者都收到信号后，会全部执行到下面的代码 
 * 如果两个线程同时收到唤醒的信号，但是另一个已经获取了锁并改变了list的状态，另外一个线程就会向下执行
 * 无法再次获取锁一旦被唤醒
+
+### Deadlocks
+
+A cycle in the wait graph is necessary and sufficient for a deadlock to occur.
+
+what can we do about it?
+
+* deadlock prevention (expensive)
+* deadlock detection & recovery (rollback)
+* do nothing 
