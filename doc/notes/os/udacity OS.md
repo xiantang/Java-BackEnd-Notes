@@ -194,3 +194,4 @@ what can we do about it?
 * deadlock prevention (expensive)
 * deadlock detection & recovery (rollback)
 * do nothing 
+
