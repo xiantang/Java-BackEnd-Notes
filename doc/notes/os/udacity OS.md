@@ -195,3 +195,9 @@ what can we do about it?
 * deadlock detection & recovery (rollback)
 * do nothing 
 
+
+
+## Pthread Creation
+
+
+
