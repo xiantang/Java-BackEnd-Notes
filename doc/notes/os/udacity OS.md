@@ -197,7 +197,35 @@ what can we do about it?
 
 
 
-## Pthread Creation
+## Thread Design Consideration
 
+### Kernel Level Structures
 
+* Process
+
+  * list of kernel-level threads
+  * virtual address space
+  * signal handlers
+
+* Light-Weight Process(LWP)
+
+  * user level registers
+  * system call args
+  * resource usage info 
+  * signal mask
+
+  similar to  ULT,but visible to kernal not needed when process not running 
+
+* Kernel-level Threads
+
+  * kernel-level registers
+  * stack pointer
+  * scheduling info 
+  * pointers to associated LWP,Process,CPU structures
+
+* CPU
+
+  * current thread
+  * list of kernel-level thread
+  * dispatching & interrupt handling information
 
