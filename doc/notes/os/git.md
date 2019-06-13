@@ -15,3 +15,29 @@
 
 添加新的 
 `git remote add  origin  https://github.com/xiantang/jdcrawler`
+
+### 添加多个远程源
+
+查看远程源  `git remote -v`
+
+```
+origin  ssh://a.git (fetch)
+origin  ssh://a.git (push)
+```
+
+添加一个名为 us 远程源
+
+`git remote add us ssh://c.git`
+
+查看远程源 `git remote -v`
+
+```
+origin  ssh://a.git (fetch)
+origin  ssh://a.git (push)
+us      ssh://b.git (fetch)
+us      ssh://b.git (push)
+
+```
+
+获取所有远程分支到本地 `git fetch --all`
+
