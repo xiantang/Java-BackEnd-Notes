@@ -229,3 +229,23 @@ what can we do about it?
   * list of kernel-level thread
   * dispatching & interrupt handling information
 
+### Synchronization-Related Issues
+
+![1560431969894](../../images/1560431969894.png)
+
+* if critical section is too short -> don't  block  just spin.
+* if long critical section use default blocking behavior.
+
+but it in a special case is we should in the multiple CPUs.
+
+### Interrupts vs. signals
+
+* Interrupts
+  * evens generated externally(外部的) Components other than the current CPU (I/O devices,timers, other CPUs)
+  * determined based on the physical platform
+  * appear asynchronously
+* Signals
+  * events triggered by the CPU & software running on it.
+  * determined based on the operating system.
+  * in a asynchronously or synchronously.
+
