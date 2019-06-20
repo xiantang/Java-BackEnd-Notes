@@ -249,3 +249,8 @@ but it in a special case is we should in the multiple CPUs.
   * determined based on the operating system.
   * in a asynchronously or synchronously.
 
+## Schedule
+
+* Scheduling is simple(FCFS)
+* maximize throughput(SJF)
+* maximize utilization of CPU devices memory
