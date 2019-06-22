@@ -361,3 +361,6 @@ T2,T3,T1
 Solution:
 
 * temp boost priority of mutex owner
+
+* lower again on release
+
