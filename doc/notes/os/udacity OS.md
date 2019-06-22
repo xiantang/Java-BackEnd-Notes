@@ -282,3 +282,82 @@ initial assumptions
 
 * schedules tasks in order of arrival
 
+if we have three Thread, thread1,thread2, and thread3, we use FCFS Scheduling
+
+T1 = 1s, T2 = 1s,T3 =10s
+
+Throughput:
+
+3/12 = 0.25 tasks/s
+
+Avg. Completion time:
+
+(1+11+12)/3 = 8 sec
+
+Avg. Wait Time:
+
+(0+1+11)/3 = 4 sec
+
+#### Shortest Job First(SJF)
+
+* schedules tasks in order of their execution time
+
+T1 = 1s, T2 = 2s,T3 =10s
+
+run queue == ordered queue
+
+or
+
+run queue == tree
+
+Throughput:
+
+3/12 = 0.25 tasks/s
+
+Avg. Completion time:
+
+(1+2+12)/3 = 5 sec
+
+Avg. Wait Time:
+
+(0+1+2)/3 = 1 sec
+
+####  SFJ + Preemption
+
+![1561187280868](../../images/1561187280868.png)
+
+heuristics based on history ?
+
+-> job running time
+
+how long did a task run last n times?
+
+-> windowed 
+
+
+
+#### Preemptive Scheduling
+
+Priority Scheduling
+
+* tasks have different **priority level**
+
+* run highest priority task next(preemption)
+
+#### Priority Inversion
+
+![1561188672137](../../images/1561188672137.png)
+
+Priority:
+
+T1,T2,T3 (Wrong)
+
+order of execution:
+
+T2,T3,T1
+
+=> priorties "inverted"
+
+Solution:
+
+* temp boost priority of mutex owner
