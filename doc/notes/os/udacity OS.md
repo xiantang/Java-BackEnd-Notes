@@ -254,3 +254,31 @@ but it in a special case is we should in the multiple CPUs.
 * Scheduling is simple(FCFS)
 * maximize throughput(SJF)
 * maximize utilization of CPU devices memory
+
+
+
+CPU scheduler
+
+* chooses one of ready tasks to run on CPU
+
+![1561184422791](../../images/1561184422791.png)
+
+runs when 
+
+* CPU becomes idle
+* new task becomes ready
+* timeslice expired timeout
+
+### run to completion 
+
+initial assumptions
+
+* group of tasks/job
+* known execution time
+* no preemption
+* single CPU
+
+#### First-Come First-Serve (FCFS)
+
+* schedules tasks in order of arrival
+
