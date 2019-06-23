@@ -336,6 +336,10 @@ how long did a task run last n times?
 
 
 
+### Preemptive
+
+
+
 #### Preemptive Scheduling
 
 Priority Scheduling
@@ -363,4 +367,72 @@ Solution:
 * temp boost priority of mutex owner
 
 * lower again on release
+
+#### Round Robin Scheduling
+
+* pick up first task from queue(like FCFS)
+* task may yield,to wait on I/O(unlike FCFS)
+
+#### Timeslice
+
+maximum amount of  uninterrupted time given to a task 
+
+-> time quantum
+
+* task may run less than timeslice time
+  * has to wait on I/O,synchronization
+    * will be placed on a queue
+  * higher priority task becomes runnable
+* using timeslices tasks are interleaved
+  * timesharing the CPU
+
+
+
+how long should a timeslice be?
+
+![1561214190446](../../images/1561214190446.png)
+
+CPU bound task : large timeslice 
+
+![1561214260291](../../images/1561214260291.png)
+
+I/O bound tasks:
+
+I/O bound tasks -> smaller timeslice 
+
+quickly response
+
+![1561280721416](../../images/1561280721416.png)
+
+
+
+So we can easily get the Conclusion：
+
+* CPU bound tasks prefer long timeslices
+
+  -> limits context switching  overheads
+
+  -> keeps CPU utilization and throughput hight
+
+* IO bound tasks prefer shorter  timeslices
+
+  -> I/O bound tasks can issue I/O ops earlier
+
+  -> keeps CPU and device utilization high
+
+  -> better user-perceived performance
+
+### Run queue Data Structures
+
+we find I/O bound tasks and CPU bound tasks should have different timeslice values then ...
+
+* same run queue,check item's type
+
+* two different structure
+
+  
+
+#### Linux O(1) Scheduler
+
+O(1) == constant time to select /add task,regardless of task count
 
