@@ -436,3 +436,48 @@ we find I/O bound tasks and CPU bound tasks should have different timeslice valu
 
 O(1) == constant time to select /add task,regardless of task count
 
+![1561292440233](../../images/1561292440233.png)
+
+Timeslice Value:
+
+* depends on priority
+* smallest for low priority
+* highest for hight priority
+
+Feedback:
+
+* sleed time:waiting/idling
+
+* longer sleep => interactive
+
+  => priority - 5 (boost)
+
+* smaller sleep => 
+
+  => compute-intensive
+
+  priority + 5 (lowered)
+
+#### Linux Completely Fair Scheduler(CFS)
+
+![1561293307834](../../images/1561293307834.png)
+
+Runqueue == Red-Black Tree
+
+* ordered by "vruntime"
+* vruntime == time spent on CPU
+
+CFS scheduling 
+
+* always pick leftmost node
+* periodically adjust vruntime
+* vruntime progress rate depends on priority and niceness
+
+if current running tasks is smaller than left most vruntime,continue running
+
+if larger,preempt and place appropriately in the tree
+
+virtual run time process rate depends on priority and niceness
+
+* rate faster for low-priority
+* rate slower for hight-priority
