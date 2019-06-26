@@ -266,4 +266,4 @@ com.csair.soc.hotswap.MyClassLoader@860d49
 
 深入理解java虚拟机
 
-深入探讨 Java 类加载器 http://www.ibm.com/developerworks/cn/java/j-lo-classloader/
+深入探讨 Java 类加载器 http://www.ibm.com/developerworks/cn/java/j-lo-classloader/b
