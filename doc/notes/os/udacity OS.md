@@ -481,3 +481,64 @@ virtual run time process rate depends on priority and niceness
 
 * rate faster for low-priority
 * rate slower for hight-priority
+
+### Scheduling on Multiprocessors
+
+![1561732381044](../../images/1561732381044.png)
+
+Shared memory multiprocessor(SMP)
+
+* keep tasks on the same CPU as much as possible
+* hiearchical scheduler architecture
+
+
+
+use load balanced 
+
+![1561733106554](../../images/1561733106554.png)
+
+
+
+Per-CPU runqueue and scheduler
+
+* load balance across CPUs
+  * based on queue length
+  * or when CPU is idle
+
+
+
+
+
+cache-affinity important！
+
+
+
+![1561732644394](../../images/1561732644394.png)
+
+multicore
+
+
+
+### Hyperthreading
+
+![1561733457273](../../images/1561733457273.png)
+
+* multiple hardware - supported execution context
+* still 1 CPU 
+* with very fast context switch
+
+hyperthreading can hide memory access latency
+
+### Scheduling for Hyperthreading Platforms
+
+Assumptions:
+
+* thread issues instruction on each cycle
+
+  max instruction-per-cycle  IPC = 1
+
+![1561734420390](../../images/1561734420390.png)
+
+* mix of CPU and memory-intensive threads
+  * aviod/limit contention on processor pipeline
+  * all component CPU and memory well uttilized
