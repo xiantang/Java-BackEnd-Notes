@@ -542,3 +542,15 @@ Assumptions:
 * mix of CPU and memory-intensive threads
   * aviod/limit contention on processor pipeline
   * all component CPU and memory well uttilized
+
+## Memory Management
+
+* uses intelligently sized containers
+  * memory pages or segments
+* not all memory is needed at once
+  * tasks operate on subset of memory
+* optimized for performance
+  * reduce time to access state
+
+### Memory Management:goat:
+
