@@ -82,8 +82,8 @@
 *  - [x] 广搜题目 (LeetCode 407. Trapping Rain Water II)
 
 ## 动态规划
-* - [ ]  动态规划知识要点 
-* - [ ] 动态规划题目1(LeetCode 120. Triangle) 
+* - [x]  动态规划知识要点 
+* - [x] 动态规划题目1(LeetCode 120. Triangle) 
 * - [ ]  动态规划题目2(LeetCode 53. Maximum Subarray) 
 * - [ ]  动态规划题目3(LeetCode 198,213. House Robber 1,2) 
 * - [ ]  动态规划题目4(LeetCode 322. Coin Change) 
