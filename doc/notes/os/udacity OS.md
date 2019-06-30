@@ -554,3 +554,15 @@ Assumptions:
 
 ### Memory Management:goat:
 
+![1561817039671](../../images/1561817039671.png)
+
+Virtual vs Physical memory
+
+Allocate
+
+* allocation,replacement
+
+Arbitrate
+
+* address translation and validation
+
