@@ -69,7 +69,7 @@
 
 于是我先实现了静态资源的支持，看到图片和 jq 能够直接通过 `href`直接嵌入页面是一件多开心的事情啊！
 
-![1561882183969](doc/images/1561882183969.png)
+![1561882183969](https://raw.githubusercontent.com/xiantang/Java-BackEnd-Notes/master/doc/images/1561882183969.png)
 
 ### 引入servlet容器
 
