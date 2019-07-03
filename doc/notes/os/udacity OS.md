@@ -566,3 +566,32 @@ Arbitrate
 
 * address translation and validation
 
+![1562077236014](../../images/1562077236014.png)
+
+MMU
+
+* translate virtual to physical address
+* report faults: illegal access,permission
+
+### Page Tables
+
+![1562077664444](../../images/1562077664444.png)
+
+like a map
+
+![1562078271743](../../images/1562078271743.png)
+
+### Page Table Size
+
+32-bit architecture
+
+* Page Table Entry(PTE)
+  * 4 bytes,including PFN+flags
+
+* Virtual Page Number(VPN)
+  * 2^32/Page Size
+
+* page size
+  * 4 KB 
+
+just to think about a map
