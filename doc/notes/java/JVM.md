@@ -13,6 +13,105 @@
 
 # Jvm
 
+## Java 技术体系
+
+* Java 程序设计语言
+* 各种平台上的Java 虚拟机
+* Java API 类库 
+* 来自商业机构和开源社区的第三方Java类库
+
+Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java
+Development Kit）
+
+Java API类库中的Java
+SE API子集 [1] 和Java虚拟机这两部分统称为JRE（Java Runtime Environment）
+
+![1562206136776](C:\Users\zhujingdi_sx\AppData\Roaming\Typora\typora-user-images\1562206136776.png)
+
+* Java ME（Micro Edition）：支持Java程序运行在移动终端（手机、PDA）上的平台，对
+  Java API有所精简，并加入了针对移动终端的支持，这个版本以前称为J2ME。
+* Java SE（Standard Edition）：支持面向桌面级应用（如Windows下的应用程序）的Java
+  平台，提供了完整的Java核心API，这个版本以前称为J2SE。
+* Java EE（Enterprise Edition）：支持使用多层架构的企业应用（如ERP、CRM应用）的
+  Java平台，除了提供Java SE API外，还对其做了大量的扩充 [3] 并提供了相关的部署支持，这
+  个版本以前称为J2EE。
+
+混合语言：
+
+言混合编程正成为主流，每种语言都可以针
+对自己擅长的方面更好地解决问题。试想一下，在一个项目之中，并行处理用Clojure语言编
+写，展示层使用JRuby/Rails，中间层则是Java，每个应用层都将使用不同的编程语言来完
+成，而且，接口对每一层的开发者都是透明的，各种语言之间的交互不存在任何困难，就像
+使用自己语言的原生API一样方便 [1] ，因为它们最终都运行在一个虚拟机之上。
+
+64 位虚拟机：
+
+Java程序运行在64位虚拟机上需要付出比较大的额外代价：首先是内
+存问题，由于指针膨胀和各种数据类型对齐补白的原因，运行于64位系统上的Java应用需要
+消耗更多的内存，通常要比32位系统额外增加10%～30%的内存消耗；
+
+普通对象指针压缩:
+
+（-XX：+UseCompressedOops，这个参数不建议显式设
+置，建议维持默认由虚拟机的Ergonomics机制自动开启）
+
+### Java 内存区域 与 内存溢出异常
+
+![1562207649814](C:\Users\zhujingdi_sx\AppData\Roaming\Typora\typora-user-images\1562207649814.png)
+
+### 程序计数器
+
+程序计数器（Program Counter Register）是一块较小的内存空间，它可以看作是当前线
+程所执行的字节码的行号指示器。
+
+线程私有
+
+### 虚拟机栈
+
+Java虚拟机栈（Java Virtual Machine Stacks）也是线程私有的，它的
+生命周期与线程相同。虚拟机栈描述的是Java方法执行的内存模型：每个方法在执行的同时
+都会创建一个栈帧（Stack Frame [1] ）用于存储局部变量表、操作数栈、动态链接、方法出口
+等信息。
+
+
+
+#### 局部变量表
+
+局部变量表存放了编译期可知的各种基本数据类型：
+
+boolean、byte、char、short、int、
+float、long、double，returnAddress
+
+其中64位长度的long和double类型的数据会占用2个局部变量空间（Slot），其余的数据
+类型只占用1个。
+
+### 本地方法栈
+
+本地方法栈则为虚拟机使用到的Native方法服务。
+
+### Java 堆
+
+Java堆（Java Heap）是Java虚拟机所管理的内存中最大的一块。
+Java堆是被所有线程共享的一块内存区域。
+
+新生代/老年代
+
+再细致一点的有
+Eden空间、From Survivor空间、To Survivor空间等。
+
+从内存分配的角度来看，线程共享的
+Java堆中可能划分出多个线程私有的分配缓冲区（Thread Local Allocation Buffer,TLAB）。
+
+### 方法区
+
+被加载的类信息
+
+常量 
+
+静态变量
+
+即时编译器编译后的代码数据
+
 ## 堆和栈的区别
 
 
@@ -24,7 +123,8 @@
 |异常错误| StackOverFlowError |OutOfMemoryError |
 <!-- * 功能不同
     * 堆存储Java中的对象（成员变量，局部变量，类变量）。
-    * 栈用来存储局部变量（方法内部的变量）和方法。
+        * 栈用来存储局部变量（方法内部的变量）和方法。
+
 * 共享性不同
     * 栈的内存是线程私有的。(方法相关的当然私有啊！！)
     * 堆的内存是线程共有的。
