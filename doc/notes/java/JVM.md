@@ -652,3 +652,16 @@ G1  收集器将整个Java 堆划分为多个大小相等的Region，新生代�
 
 虚拟机提供了一个-XX：PretenureSizeThreshold参数，令大于这个设置值的对象直接在老年代分配。
 
+
+
+### 虚拟机性能监控与故障处理工具
+
+* jps 显示HotSpot 虚拟机进程
+
+* jstat 收集虚机各方面运行数据
+  * jstat-gcutil 2764 
+  * ![1562899163601](D:\project\Java-BackEnd-Notes\doc\images\1562899163601.png)
+* jstack 
+* jmap
+* jhat 
+
