@@ -4,8 +4,6 @@
 打开 IntelliJ IDEA-&gt;Settings -&gt;Build, Execution, Deployment -&gt; Build Tools &gt; Maven
 或者直接搜索 maven
 具体如下图所示：
-
-![1e08175f8fca0ce0fb2f8c58c6d613ee.png](file:///C:/Users/xiantang/AppData/Local/Temp/enhtmlclip/Image.png)
 而一般情况下在 c:\Users\xx.m2 \ 这个目录下面没有 settings.xml 文件，我们可以新建一个，settings.xml 文件下的内容是：直接粘贴复制保存在上图所示的目录下面就可以了. 需要注意的是，需要点击上图所示右下角的 override。
 
 ```xml
