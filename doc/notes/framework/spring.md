@@ -163,3 +163,67 @@ HelloWorldService helloWorldService = (HelloWorldService) beanFactory.getBean("h
 helloWorldService.helloWorld();
 ```
 
+## 6.step6-ApplicationContext登场
+
+```bash
+git checkout step-6-invite-application-context
+```
+
+现在BeanFactory的功能齐全了，但是使用起来有点麻烦。于是我们引入熟悉的`ApplicationContext`接口，并在`AbstractApplicationContext`的`refresh()`方法中进行bean的初始化工作。
+
+```java
+ApplicationContext applicationContext = new ClassPathXmlApplicationContext("tinyioc.xml");
+HelloWorldService helloWorldService = (HelloWorldService) applicationContext.getBean("helloWorldService");
+helloWorldService.helloWorld();
+```
+
+是不是非常熟悉？至此为止，我们的tiny-spring的IoC部分可说完工了。这部分的类、方法命名和作用，都是对应Spring中相应的组件。虽然代码量只有400多行，但是已经有了基本的IoC功能！
+
+## 7.step7-使用JDK动态代理实现AOP织入
+
+```
+git checkout step-7-method-interceptor-by-jdk-dynamic-proxy
+```
+
+织入（weave）相对简单，我们先从它开始。Spring AOP的织入点是`AopProxy`，它包含一个方法`Object getProxy()`来获取代理后的对象。
+
+在Spring AOP中，我觉得最重要的两个角色，就是我们熟悉的`MethodInterceptor`和`MethodInvocation`（这两个角色都是AOP联盟的标准），它们分别对应AOP中两个基本角色：`Advice`和`Joinpoint`。Advice定义了在切点指定的逻辑，而Joinpoint则代表切点。
+
+```java
+public interface MethodInterceptor extends Interceptor {
+    Object invoke(MethodInvocation invocation) throws Throwable;
+}
+```
+
+Spring的AOP只支持方法级别的调用，所以其实在AopProxy里，我们只需要将MethodInterceptor放入对象的方法调用即可。
+
+我们称被代理对象为`TargetSource`，而`AdvisedSupport`就是保存TargetSource和MethodInterceptor的元数据对象。这一步我们先实现一个基于JDK动态代理的`JdkDynamicAopProxy`，它可以对接口进行代理。于是我们就有了基本的织入功能。
+
+```java
+	@Test
+	public void testInterceptor() throws Exception {
+		// --------- helloWorldService without AOP
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("tinyioc.xml");
+		HelloWorldService helloWorldService = (HelloWorldService) applicationContext.getBean("helloWorldService");
+		helloWorldService.helloWorld();
+
+		// --------- helloWorldService with AOP
+		// 1. 设置被代理对象(Joinpoint)
+		AdvisedSupport advisedSupport = new AdvisedSupport();
+		TargetSource targetSource = new TargetSource(helloWorldService, HelloWorldServiceImpl.class,
+				HelloWorldService.class);
+		advisedSupport.setTargetSource(targetSource);
+
+		// 2. 设置拦截器(Advice)
+		TimerInterceptor timerInterceptor = new TimerInterceptor();
+		advisedSupport.setMethodInterceptor(timerInterceptor);
+
+		// 3. 创建代理(Proxy)
+		JdkDynamicAopProxy jdkDynamicAopProxy = new JdkDynamicAopProxy(advisedSupport);
+		HelloWorldService helloWorldServiceProxy = (HelloWorldService) jdkDynamicAopProxy.getProxy();
+
+		// 4. 基于AOP的调用
+		helloWorldServiceProxy.helloWorld();
+
+	}
+```
