@@ -227,3 +227,54 @@ Spring的AOP只支持方法级别的调用，所以其实在AopProxy里，我们
 
 	}
 ```
+
+spring 启动流程：
+
+	### Tomcat 启动流程
+
+1. 解析web.xml
+
+2. 部署web.xml 由`<listener>`元素标记的事件监听器会被创建和初始化
+
+```xml
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+```
+
+3. 对于所有事件监听器，如果实现了`ServletContextListener`接口，将会执行其实现的`contextInitialized()`方法
+
+```java
+    public void contextInitialized(ServletContextEvent event) {
+        this.initWebApplicationContext(event.getServletContext());
+    }
+```
+
+4. 部署描述文件中由`<filter>`元素标记的过滤器会被创建和初始化，并调用其`init()`方法
+5. 部署描述文件中由`<servlet>`元素标记的servlet会根据`<load-on-startup>`的权值按顺序创建和初始化，并调用其`init()`方法
+
+![img](https://upload-images.jianshu.io/upload_images/3132379-e00a302bf7a8e24b.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp)
+
+首先看一下前面讲述的`ServletContextListener`接口源码:
+
+```java
+public interface ServletContextListener extends EventListener {
+	/**
+	实现了该接口的listener会向发布者进行订阅，当Web应用初始化或销毁时会分别调用上述两个方法。
+	**/
+    void contextInitialized(ServletContextEvent var1);
+
+    void contextDestroyed(ServletContextEvent var1);
+}
+
+```
+
+
+
+
+
+DispatcherServlet 怎么用：
+
+
+
+为什么类加载器用组合
