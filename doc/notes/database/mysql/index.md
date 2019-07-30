@@ -210,3 +210,6 @@ public void goodsDaoTest(){
 }  
 ```
 查出同一版本的数据，赋值给不同对象先对good1进行更新操作，执行成功，将version++。然后修改good2 这时候去比较version java对象的version 还是1 但是数据库的值已经是2了 所以就无法匹配了。
+
+1. 按自然语言搜索模式查询 
+   `SELECT * FROM articles WHERE MATCH (title,body) AGAINST ('关键词' IN NATURAL LANGUAGE MODE);`
