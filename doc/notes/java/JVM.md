@@ -1,275 +1,8 @@
-# TODO
-* ASM框架
-* 程序计数器，本地方法区
-* 字节码增强
-* 类加载机制，双亲委派模型
-* JVM的内存模型  
-* 内存泄漏和内存溢出
-* java的垃圾回收机制   
-* 讲一下JVM的内存分区 
-* 《深入理解JVM虚拟机》垃圾回收原理 
-* Java的逻辑分区 
-* 方法区啥的?一个成员变量存在哪里?如果是局部变量是一个对象的引用呢?存在哪里?
-
-
-
-## 堆和栈的区别
-
-
-
-| 类型     | 堆                                        | 栈                 |
-| -------- | ----------------------------------------- | ------------------ |
-| 功能     | 堆存储Java对象(成员变量,局部变量，类变量) | 存储局部变量和方法 |
-| 共享性   | 线程共有                                  | 线程私有           |
-| 异常错误 | StackOverFlowError                        | OutOfMemoryError   |
-
-- 功能不同
-      * 堆存储Java中的对象（成员变量，局部变量，类变量）。
-          * 栈用来存储局部变量（方法内部的变量）和方法。
-- 共享性不同
-  - 栈的内存是线程私有的。(方法相关的当然私有啊！！)
-  - 堆的内存是线程共有的。
-- 异常错误不同
-  - 栈空间不足：java.lang.StackOverFlowError。 经典！
-  - 堆空间不足：java.lang.OutOfMemoryError。对象存满了 -->
-
-### 栈的组成
-
-栈三部分:
-
-- 局部变量区
-
-  - 结构:以一个字长为单位，从0开始计数的数组。
-  - 类型为short、byte和char会被转换成为int
-    long和double占据两个连续的元素。
-  - 实例方法只是多了一个隐藏的this。
-  - 获取数据直接取索引。
-
-- 操作数栈
-
-  - 和局部变量一样，也是字长为1的数组，不是通过索引是用出栈和入栈来决定的。还记得迪杰斯特拉吗？！
-    ![](https://iamjohnnyzhuang.github.io/public/upload/4.png)
-
-- 帧数据区
-
-  - Java栈帧还需要一些数据来支持常量池的解析，正常方法的返回。
-  - 处理方法的正常结束和异常终止。通过return来正常结束的话，就弹出当前的栈帧，恢复发起调用方法的栈。如果方法有返回值JVM就会将返回值压入调用方法的操作数栈中。
-  - 处理异常:保存了一个对此方法异常引用表的引用。
-
-- 栈的整个结构
-
-  ```java
-  public class Main {
-  public static void addAndPrint(){
-      double result = addTwoTypes(1, 88.88);
-      System.out.println(result);
-  }
-  
-  public static double addTwoTypes(int i, double d) {
-      return i + d;
-      }
-  }
-  ```
-
-  过程快照：
-  ![](https://iamjohnnyzhuang.github.io/public/upload/5.png)
-
-如果是方法中的局部变量就存储在堆中。
-
-### 堆
-
-当一颗二叉树的每个节点都大于等于它的两个子节点时，称作堆有序。
-用执政表示一个二叉树的话就是一个完全二叉树。
-
-- 由上到下的堆有序:
-  - 上浮:只要记住位置k节点的父亲节点是位置k/2
-    - 插入元素：将新元素上浮到适合位置
-  - 下沉:
-    - 删除最大元素：从数组顶端删除最大元素，选择数组最后节点。
-
-
-
-### 方法区
-
-是一个各个线程共享的内存区域，用于存储已经被虚拟机加载的类信息，常量，静态变量，及时编译器编译后的代码等数据。别名`Non-Heap`，目的是与Java堆区分开来。
-
-### 运行时常量池
-
-运行时候常量池是方法区的一部分，Class文件除了类的版本，字段，方法等描述信息，还有一个信息是(Constant Pool Table),用于存放字面量和符号引用，这部分将在类加载后进入方法区的运行常量池中。 
-类的信息，方法名，方法参数信息。
-
-## GC
-
-`finalize()`：用来发现对象是否存在有没有没有被清除的部分。一旦垃圾回收器准备好释放对象占用的空间时，首先调用这个方法，并且在下一次垃圾回收动作发生时，才会真正回收内存。
-
-基于DFS的垃圾回收技术：对于活的对象，一定可以从堆栈或者静态存储区中找到它的引用，然后遍历找到对象，在寻找对象的引用，往复如此，就能得到所有活的对象。
-
-- "停止"----"复制":暂停程序运行，将存活对象复制到另外一个堆，没有复制的都是垃圾。
-  搬运的同时，所有指向对象的引用都必须修正，位于 堆和静态存储区的引用可以直接被修正。
-  - 需要两个堆，按需从堆分配几块较大的内存，复制动作发生在大块内存之间。
-  - 程序稳定没有垃圾时， 切换到"标记 ----清扫"模式，在垃圾少的时候速度很快。
-- "标记 ----清扫":DFS遍历所有活的对象，并设置标记， 结束后，没有标记的对象释放， 但是剩下的堆空间是不连续的 ，所以得重新整理对象。
-
-Java虚拟机会监控垃圾回收器的效率， 如果效率低就采用"标记 ----清扫"，如果内存中碎片较多就会采用"停止 ---- 复制"，这样的自适应策略。
-    
-
-
-
 ## 反射
 
 **Java 反射机制**：在程序运行的时候，对于任意的一个类，都能够知道这个类的所有属性和方法，对于任意一个对象可以调用它的任意属性和方法这种动态获取信息以及动态调用对象的方法的功能叫做Java反射(reflect)。
 
 
-
-## Java 热部署原理
-
-1、热部署是什么？
-
-对于Java应用程序来说，热部署就是在运行时更新Java类文件。
-
-2、热部署有什么用？
-
-可以不重启应用的情况下，更新应用。举个例子，就像电脑可以在不重启的情况下，更换U盘。
-
-OSGI也正是因为它的模块化和热部署，才显得热门。
-
-3、热部署的原理是什么？
-
-想要知道热部署的原理，必须要了解java类的加载过程。一个java类文件到虚拟机里的对象，要经过如下过程。
-
-![img](../../images/030931301899477-1559111854402-1559111856420.png)
-
-首先通过java编译器，将java文件编译成class字节码，类加载器读取class字节码，再将类转化为实例，对实例newInstance就可以生成对象。
-
-类加载器ClassLoader功能，也就是将class字节码转换到类的实例。
-
-在java应用中，所有的实例都是由类加载器，加载而来。
-
-一般在系统中，类的加载都是由系统自带的类加载器完成，而且对于同一个全限定名的java类（如com.csiar.soc.HelloWorld），只能被加载一次，而且无法被卸载。
-
-这个时候问题就来了，如果我们希望将java类卸载，并且替换更新版本的java类，该怎么做呢？
-
-​     既然在类加载器中，java类只能被加载一次，并且无法卸载。那是不是可以直接把类加载器给换了？答案是可以的，我们可以自定义类加载器，并重写ClassLoader的findClass方法。想要实现热部署可以分以下三个步骤：
-
-1、销毁该自定义ClassLoader
-
-2、更新class类文件
-
-3、创建新的ClassLoader去加载更新后的class类文件。
-
-示例代码如下：
-
-
-
-```java
-package com.csair.soc.hotswap;
-
-import java.io.IOException;
-import java.io.InputStream;
-/**
- * 自定义类加载器，并override findClass方法
- */
-public class MyClassLoader extends ClassLoader{
-     @Override
-     public Class<?> findClass(String name) throws ClassNotFoundException{
-            try{
-                String fileName = name.substring(name.lastIndexOf("." )+1) + ".class" ;
-                InputStream is = this.getClass().getResourceAsStream(fileName);
-                 byte[] b = new byte[is.available()];
-                is.read(b);
-                 return defineClass(name, b, 0, b. length);
-           } catch(IOException e){
-                 throw new ClassNotFoundException(name);
-           }
-     }
-}
-```
-
-需要更新的类文件：
-
-```java
-package com.csair.soc.hotswap;
-public class HelloWorld {
-     public void say(){
-           System. out.println( "Hello World V1");
-     }
-}
-```
-
-在工程的根目录下，生成V2版本的HelloWorld.class,内容如下。
-
-```java
-package com.csair.soc.hotswap;
-public class HelloWorld {
-      public void say(){
-           System. out.println( "Hello World V2");
-     }
-}
-```
-
-测试主程序
-
-```java
-package com.csair.soc.hotswap;
-
-import java.io.File;
-import java.lang.reflect.Method;
-
-public class Hotswap {
-     public static void main(String[] args) throws Exception {
-            loadHelloWorld();
-            // 回收资源,释放HelloWorld.class文件，使之可以被替换
-           System. gc();
-           Thread. sleep(1000);// 等待资源被回收
-           File fileV2 = new File( "HelloWorld.class");
-           File fileV1 = new File(
-                      "bin\\com\\csair\\soc\\hotswap\\HelloWorld.class" );
-           fileV1.delete(); //删除V1版本
-           fileV2.renameTo(fileV1); //更新V2版本
-           System. out.println( "Update success!");
-            loadHelloWorld();
-     }
-
-     public static void loadHelloWorld() throws Exception {
-           MyClassLoader myLoader = new MyClassLoader(); //自定义类加载器
-           Class<?> class1 = myLoader
-                     .findClass( "com.csair.soc.hotswap.HelloWorld");//类实例
-           Object obj1 = class1.newInstance(); //生成新的对象
-           Method method = class1.getMethod( "say");
-           method.invoke(obj1); //执行方法say
-           System. out.println(obj1.getClass()); //对象
-           System. out.println(obj1.getClass().getClassLoader()); //对象的类加载器
-     }
-}
-```
-
-输出结果：
-
-Hello World V1
-
-class com.csair.soc.hotswap.HelloWorld
-
-com.csair.soc.hotswap.MyClassLoader@bfc8e0
-
-Update success!
-
-Hello World V2
-
-class com.csair.soc.hotswap.HelloWorld
-
-com.csair.soc.hotswap.MyClassLoader@860d49
-
-根据结果可以看到，在没有重启应用的情况下，成功的更新了HelloWorld类。
-
-以上只是热部署的最简单的原理实践，实际情况会复杂的多。OSGI的最关键理念就是应用模块（bundle）化，对于每一个bundle,都有其自己的类加载器，当需要更新bundle时，把bundle和它的类加载器一起替换掉，就可以实现模块的热替换。
-
-
-
-### 参考资料
-
-深入理解java虚拟机
-
-深入探讨 Java 类加载器 http://www.ibm.com/developerworks/cn/java/j-lo-classloader/b
 
 # Jvm
 
@@ -286,7 +19,7 @@ Development Kit）
 Java API类库中的Java
 SE API子集 [1] 和Java虚拟机这两部分统称为JRE（Java Runtime Environment）
 
-![1562206136776](../../images/1562206136776.png)
+![1562206136776](。。../../images/1562206136776.png)
 
 * Java ME（Micro Edition）：支持Java程序运行在移动终端（手机、PDA）上的平台，对
   Java API有所精简，并加入了针对移动终端的支持，这个版本以前称为J2ME。
@@ -364,7 +97,87 @@ Eden空间、From Survivor空间、To Survivor空间等。
 从内存分配的角度来看，线程共享的
 Java堆中可能划分出多个线程私有的分配缓冲区（Thread Local Allocation Buffer,TLAB）。
 
+#### 堆和栈的区别
+
+
+
+| 类型     | 堆                                        | 栈                 |
+| -------- | ----------------------------------------- | ------------------ |
+| 功能     | 堆存储Java对象(成员变量,局部变量，类变量) | 存储局部变量和方法 |
+| 共享性   | 线程共有                                  | 线程私有           |
+| 异常错误 | StackOverFlowError                        | OutOfMemoryError   |
+
+- 功能不同
+      * 堆存储Java中的对象（成员变量，局部变量，类变量）。
+          * 栈用来存储局部变量（方法内部的变量）和方法。
+- 共享性不同
+  - 栈的内存是线程私有的。(方法相关的当然私有啊！！)
+  - 堆的内存是线程共有的。
+- 异常错误不同
+  - 栈空间不足：java.lang.StackOverFlowError。 经典！
+  - 堆空间不足：java.lang.OutOfMemoryError。对象存满了 -->
+
+### 栈的组成
+
+栈三部分:
+
+- 局部变量区
+
+  - 结构:以一个字长为单位，从0开始计数的数组。
+  - 类型为short、byte和char会被转换成为int
+    long和double占据两个连续的元素。
+  - 实例方法只是多了一个隐藏的this。
+  - 获取数据直接取索引。
+
+- 操作数栈
+
+  - 和局部变量一样，也是字长为1的数组，不是通过索引是用出栈和入栈来决定的。还记得迪杰斯特拉吗？！
+    ![](https://iamjohnnyzhuang.github.io/public/upload/4.png)
+
+- 帧数据区
+
+  - Java栈帧还需要一些数据来支持常量池的解析，正常方法的返回。
+  - 处理方法的正常结束和异常终止。通过return来正常结束的话，就弹出当前的栈帧，恢复发起调用方法的栈。如果方法有返回值JVM就会将返回值压入调用方法的操作数栈中。
+  - 处理异常:保存了一个对此方法异常引用表的引用。
+
+- 栈的整个结构
+
+  ```java
+  public class Main {
+  public static void addAndPrint(){
+      double result = addTwoTypes(1, 88.88);
+      System.out.println(result);
+  }
+  
+  public static double addTwoTypes(int i, double d) {
+      return i + d;
+      }
+  }
+  ```
+
+  过程快照：
+  ![](https://iamjohnnyzhuang.github.io/public/upload/5.png)
+
+如果是方法中的局部变量就存储在堆中。
+
+### 堆
+
+当一颗二叉树的每个节点都大于等于它的两个子节点时，称作堆有序。
+用执政表示一个二叉树的话就是一个完全二叉树。
+
+- 由上到下的堆有序:
+  - 上浮:只要记住位置k节点的父亲节点是位置k/2
+    - 插入元素：将新元素上浮到适合位置
+  - 下沉:
+    - 删除最大元素：从数组顶端删除最大元素，选择数组最后节点。
+
+
+
+
+
 ### 方法区
+
+是一个各个线程共享的内存区域，用于存储已经被虚拟机加载的类信息，常量，静态变量，及时编译器编译后的代码等数据。别名`Non-Heap`，目的是与Java堆区分开来。
 
 被加载的类信息
 
@@ -380,8 +193,8 @@ HotSpot 虚拟机设计团队选择把GC分代收集扩展至方法区
 
 ##### 运行时常量池
 
-运行时常量池（Runtime Constant Pool）是方法区的一部分。Class文件中除了有类的版
-本、字段、方法、接口等描述信息外。
+运行时候常量池是方法区的一部分，Class文件除了类的版本，字段，方法等描述信息，还有一个信息是(Constant Pool Table),用于存放字面量和符号引用，这部分将在类加载后进入方法区的运行常量池中。 
+类的信息，方法名，方法参数信息。
 
 String 的 intern() 方法可以将运行期间的新的常量也放入池中
 
@@ -460,7 +273,53 @@ Java 程序通过栈上的reference 数据来操作堆上的具体数据
 
 ## 垃圾收集器与内存分配策略
 
+首先我提出几个问题：
+
+* Java 的内存/垃圾回收机制是什么？
+* 什么是内存碎片 如何解决？
+
 Java 不选用引用计数是因为它很难解决对象之间相互循环引用的问题。
+
+![1564904495635](../../images/1564904495635.png)
+
+为何要选择 这些地方作为GC ROOT？ 因为首先你需要确定的GC ROOT 一定是对象存活的对象，而上图这些位置的对象都能保证存活，或者是不被GC所波及，因为GC所主要处理的位置是堆。
+
+对于Java 的内存回收机制我们主要分为3种：
+
+* 标记-清除算法
+  * 不足：效率不高，容易产生内存碎片。
+* 复制算法
+  * 效率高，复制成本大。
+  * 不足：如果是1：1模型，成本太高。
+  * 分配担保策略
+* 标记-整理算法
+  * 因为老年代的对象生存率高，所以使用复制算法效率会很差，就提出了这个标记-整理算法。
+
+我们可以发现每个算法都有他的优劣点，所以JVM 开发者们设计出了 一种名叫 ”分代收集“的方式进行垃圾回收。
+
+新生代选用复制算法，因为剩下的存活对象少
+
+老年代选用"标记—清理","标记—整理"的算法做 	
+
+----------------------------------------------------------------------------
+
+### 
+
+前置知识 什么是内存碎片？
+
+#### 内部碎片
+
+分配内存到进程A，内存被进程占据了而不被利用，同时系统也无法利用这块内存，直到进程A被终结，释放内存。
+
+#### 外部碎片
+
+还没被分配出去的内存太少了不足分配给下一个进程，又或者多个不连续的内存总空间长度能满足新申请的进程，但是由于地址是不连续的内存，无法分配给新进程。
+
+Java 中的内存碎片可以理解为外部碎片，因为标记-清除算法只负责将标记的需要回收的内存给回收，对于一块内存，会留下很多小的空的位置，但是这些位置不足以去申请一个连续的对象。
+
+对于内存碎片的解决，我们首先要明确，产生内存碎片的主要是老年代，所以我们主要聊一下这个CMS 如何解决内存碎片。
+
+CMS 提供了 -XX：+UseCMSCompactAtFullCollection 用于在CMS收集器顶不住要进行FullGC时开启内存碎片的合并整理过程。虽然内存碎片没有了，但是停顿时间会变长很多很多，虚拟机设计者提供了 -XX：CMSFullGCsBeforeCompaction，在上一次CMS并发GC执行过后，到底还要再执行多少次full GC才会做压缩。默认是0，也就是在默认配置下每次CMS GC顶不住了而要转入full GC的时候都会做压缩。 
 
 ### 可达性分析算法
 
@@ -529,6 +388,10 @@ IBM 研究表明，新生对象98%都是“朝生夕死”，所以并不需要�
 
 标记过程仍然与“标记-清除”算法一样，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。
 
+![1564905737225](../../images/1564905737225.png)
+
+![1564905750262](../../images/1564905750262.png)
+
 ### 分代收集
 
 对象存活周期的不同将内存划分为几块。一般是把Java堆
@@ -575,7 +438,7 @@ JDK 1.3.1 之前新生代收集器的唯一选择
 * 不仅仅说明它只会使用一个CPU或一条收集线程去完成垃圾收集工作
 * 进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束。
 
-![1562823044829](D:\project\Java-BackEnd-Notes\doc\images\1562823044829.png)
+![1562823044829](../../images/1562823044829.png)
 
 JDK 1.3->1.7 HotSpot虚拟机开发团队为消除或者减少工
 作线程因内存回收而导致停顿的努力一直在进行着
@@ -611,14 +474,18 @@ Concurent Mark Sweep
 
 初始标记仅仅只是标记一下GC Roots能直接关联到的对象，速度很快，并发标记阶段就是进行GC RootsTracing的过程。
 
-重新标记阶段则是为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。
+重新标记阶段则是为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。  时间短！
 
 ![1562844211568](../../images/1562844211568.png)
 
 缺点：
 
-* CPU 资源非常敏感
+* CPU 资源非常敏感 虽然不会造成用户线程停顿，但是用户线程的吞吐量会降低。默认启动的回收线程是CPU 数量 +3/+4  所以核心数很少的情况下，对用户线程的影响越大。
+  * 增量式并发收集器 效果不好
 * 无法处理浮动垃圾
+  * 浮动垃圾：并发清理阶段用户线程还在运行着，伴随程序运行自然就还会有新的垃圾不断产生，这一部分垃圾出现在标记过程之后，CMS无法在当次收集中处理掉它们，只好留待下一次GC时再清理掉。
+  * 所以必须预留一段空间间提供并发收集时的程序运作使用。1.5默认设置CMS 收集器在老年代使用68%就被激活，1.6提高到92%。如果内存无法满足需求，就会触发一次Concurrent Mode Failure，启动后备方案 启动 Serial Old 来对老年代进行回收，但是停顿时间就很长了。
+  * 内存碎片：CMS 提供了 -XX：+UseCMSCompactAtFullCollection 用于在CMS收集器顶不住要进行FullGC时开启内存碎片的合并整理过程。
 * 基于 标记 - 清除算法实现的收集器
 
 
