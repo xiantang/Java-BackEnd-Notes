@@ -351,6 +351,106 @@ ByteChunk 的 toString 方法是使用StringCache 的toString 方法 但是其�
 
 如果是用默认的 `new String(byte[], int, int, Charset)` 会对整个byte 进行拷贝，对于一个巨大的byte[] 中我们只需要提取一些些数据，就会带来严重的性能损耗。
 
+### Request 是如何被解析的
+
+他是如何判断打标的位置的？
+
+下面为以给请求行中的 URI 打标为大家解释
+
+我们要探寻的是:
+
+```java
+/**
+ * Implementation of InputBuffer which provides HTTP request header parsing as
+ * well as transfer decoding.
+ *
+ * @author <a href="mailto:remm@apache.org">Remy Maucherat</a>
+ * @author Filip Hanik
+ */
+public class InternalNioInputBuffer extends AbstractInputBuffer<NioChannel> {
+   @Override
+    public boolean parseRequestLine(boolean useAvailableDataOnly)
+        throws IOException {
+    		//-----省略前面的解析步骤
+      	if (parsingRequestLinePhase == 4) {
+            // Mark the current buffer position
+            
+            int end = 0;
+            //
+            // Reading the URI
+            //
+            boolean space = false;
+            while (!space) {
+                // Read new bytes if needed
+                if (pos >= lastValid) {
+                    if (!fill(true, false)) //request line parsing
+                        return false;
+                }
+                if (buf[pos] == Constants.SP || buf[pos] == Constants.HT) {
+                    space = true;
+                    end = pos;
+                } else if ((buf[pos] == Constants.CR)
+                        || (buf[pos] == Constants.LF)) {
+                    // HTTP/0.9 style request
+                    parsingRequestLineEol = true;
+                    space = true;
+                    end = pos;
+                } else if ((buf[pos] == Constants.QUESTION)
+                        && (parsingRequestLineQPos == -1)) {
+                    parsingRequestLineQPos = pos;
+                }
+                pos++;
+            }
+            request.unparsedURI().setBytes(buf, parsingRequestLineStart, end - parsingRequestLineStart);
+            if (parsingRequestLineQPos >= 0) {
+                request.queryString().setBytes(buf, parsingRequestLineQPos + 1, 
+                                               end - parsingRequestLineQPos - 1);
+                request.requestURI().setBytes(buf, parsingRequestLineStart, parsingRequestLineQPos - parsingRequestLineStart);
+            } else {
+                // URL 当解析的时候之前个请求方法执行完之后会找到对应的空格
+                // 请求行的开始就就是parseRequestLineStart 开始位置
+                //  之后向下寻找空格 并将他标记为end
+                // setBytes 的时候只要把开始的位置和长度设置进去就行了
+                request.requestURI().setBytes(buf, parsingRequestLineStart, end - parsingRequestLineStart);
+            }
+            System.out.println("解析出来的URI为: " +request.requestURI().toString());
+            parsingRequestLinePhase = 5;
+        }
+    }
+}
+```
+
+这里主要要了解的是几个变量
+
+* buf 整条请求头的byte[]
+* parsingRequestLineStart URI 开始位置
+* end URI 结束位置
+
+上面代码的大致意识是 将parsingRequestLineStart的位置设置为上次解析（解析请求方法）的位置＋1
+
+然后通过遍历buf 寻找从 parsingRequestLineStart 开始的第一个空格。
+
+并且为了避免多余的编码，tomcat 将 `空格` `CR` `LF` 也转换为字节，只要比较字节就能判断是否相同，期间没有任何编码。 
+
+```java
+/**
+* CR.
+*/
+public static final byte CR = (byte) '\r';
+/**
+* LF.
+*/
+public static final byte LF = (byte) '\n';
+/**
+* SP.
+*/
+public static final byte SP = (byte) ' ';
+```
+
+
+
+将这些字节流通过setBytes 打标，记住是offset/offset+长度。
+
 ### 总结
 
 还是开头那句话:
