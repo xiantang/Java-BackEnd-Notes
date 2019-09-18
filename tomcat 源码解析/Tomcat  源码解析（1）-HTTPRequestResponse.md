@@ -152,9 +152,7 @@ try {
 
 根据源码上的注释 我们可以大致了解，在启动Tomcat 的时候，会开启一个8005的端口，这个服务负责监听到来的 telnet 连接，当受到 为SHUTDOWN  的命令时候，销毁Tomcat 的所有服务并且关闭Tomcat。
 
-
-
-## Request & Response
+# Request & Response
 
 在阅读Tomcat Request 源码的时候，我发现了一个比较有趣的东西:
 
@@ -456,6 +454,96 @@ public static final byte SP = (byte) ' ';
 还是开头那句话:
 
 Tomcat 采用延时编码的方式来提升性能，解析完一个Request后，如果没有被利用，变量存储的只是这个字节流的打标，只有在使用的时候才会去编码或者去取缓存。这样有个好处，就是Request 中的信息不是全部要使用的，有时候我们只需要取一部分就行了，所以就可以降低编码的性能消耗。
+
+
+
+# RequestFacade
+
+阅读Request 源码的时候我发现他是拥有一个这样的奇怪方法:
+
+```java
+/**
+     * Return the <code>ServletRequest</code> for which this object
+     * is the facade.  This method must be implemented by a subclass.
+     */
+    public HttpServletRequest getRequest() {
+        if (facade == null) {
+            facade = new RequestFacade(this);
+        }
+        return facade;
+    }
+
+```
+
+其实这个是一种设计模式，叫做门面模式。
+
+因为servlet 执行service() 方法的时候可以看到他传入的静态类型是ServletRequest 也就是说所有继承了ServeltRequest 的子类对象可以被传入service() 方法。
+
+```java
+public void service(ServletRequest req, ServletResponse res)
+            throws ServletException, IOException;
+```
+
+那么Reqeust 作为Servlet 的子类自然可以传入这个方法，并且向上转型成为ServletReqeust。
+
+但是会遇到一个安全性的问题，如果一个熟悉Tomcat原理的用户，可以将ServletReqeust 转型成为Reqeust
+
+就可以调用他的公共方法了。
+
+所以我们为Request 添加了一个外观类:
+
+![img](data:image/png;base64,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)
+
+RequestFacade 和 Request 共同继承了 ServletRequest 这表示他能代替Request 传入Service 方法,并且他的构造方法就是传入一个 Request
+
+ ```java
+/**
+     * Construct a wrapper for the specified request.
+     *
+     * @param request The request to be wrapped
+     */
+    public RequestFacade(Request request) {
+
+        this.request = request;
+
+    }
+
+/**
+     * The wrapped request.
+     */
+    protected Request request = null;
+
+ ```
+
+也就是说我们可以将他理解为一个Request 的包装,将其中的request 成员私有，他实现的所有HttpServletRequest的方法都是调用Request的对应方法。
+
+```java
+ @Override
+    public int getContentLength() {
+
+        if (request == null) {
+            throw new IllegalStateException(
+                            sm.getString("requestFacade.nullRequest"));
+        }
+
+        return request.getContentLength();
+    }
+
+
+    @Override
+    public String getContentType() {
+
+        if (request == null) {
+            throw new IllegalStateException(
+                            sm.getString("requestFacade.nullRequest"));
+        }
+
+        return request.getContentType();
+    }
+
+```
+
+这时，servlet 程序员仍然可以对Service() 中的ServletRequest 转型成为 RequestFacade 但是只能调用Request 对于HttpServletRequest 的实现。
 
 
 
