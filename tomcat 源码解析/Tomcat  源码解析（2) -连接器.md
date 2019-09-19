@@ -307,3 +307,22 @@ protected static class RecycledProcessors<P extends Processor<S>, S>
 
 
 
+这里的adapter  实际上是CoyoteAdapter的实例，该 adapter 的作用是从connector 到 container
+
+的入口来使用的:
+
+```java
+if (postParseSuccess) {
+                //check valves if we support async
+                request.setAsyncSupported(connector.getService().getContainer().getPipeline().isAsyncSupported());
+                // Calling the container 调用 容器
+                // 获取并且调用
+                connector.getService().getContainer().getPipeline().getFirst().invoke(request, response); // 一个复杂的调用
+}
+```
+
+当从适配的connector中获取容器后，就会使用容器的一个重要结构: 管道。
+
+每个容器类组件都有一个pipeline属性，这个属性控制请求的处理过程，在pipeline上可以添加Valve，进而可以控制请求的处理流程。可以将请求想象成水的流动，请求需要在各个组件之间流动，中间经过若干的水管和水阀，等所有的水阀走完，请求也就处理完了，而每个组件都会有一个默认的水阀（以Standard作为类的前缀）来进行请求的处理，如果业务需要的话，可以自定义Valve，将其安装到容器中。
+
+我们将在之后独立出来一个容器的章节来讲述Tomcat 的容器和管道是如何实现的。
