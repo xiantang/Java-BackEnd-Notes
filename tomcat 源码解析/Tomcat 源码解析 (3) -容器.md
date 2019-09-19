@@ -78,7 +78,7 @@ public void invoke(Request req,Response res,ValveContext context){
 
 可以很清晰的看到，对于阀和阀之间都是采用双向箭头来表示，因为可以通过回搠回到上一个阀中。
 
-在Tomcat 7的实现中则是将Valve 设置成为单项链表的实现，每个pipeline的基础阀在链表的尾部，并且如果有新的valve 被嵌入的时候，将他插入在尾部，并且在基础阀的前一个节点。
+在Tomcat 7的实现中则是将Valve 设置成为单项链表的实现，每个pipeline的基础阀在链表的尾部，并且如果有新的valve 被嵌入的时候，将他插入在尾部，并且在基础阀的前一个节点,这也是用普通的遍历所达不到的效果。
 
 ```java
 // Add this Valve to the set associated with this Pipeline
