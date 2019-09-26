@@ -51,6 +51,16 @@ public void removeChild(Container child);
 
 并且更具上面的注释，在实现add 方法的时候必须对传入的子容器设置父容器。
 
+
+
+## Host 和 Engine 是什么?
+
+如果你需要在Tomcat 上部署多个Context 容器的话，你需要使用Host 容器,如果只有一个Context 容器的话，理论上不需要Host 容器，但是在Tomcat 的实际部署的时候，总是会使用一个Host 容器。所以他基本只是作为一个包含Context 容器的父容器。
+
+
+
+而Engine 容器则是处于最顶层的容器，默认情况下Tomcat 会使用Engine 容器并且Engine 容器中包含一个 Host 容器。
+
 ## 管道
 
 Tomcat 并没有采用遍历Valve 的方式去实现阀的遍历执行。也没有采用Tomcat4 之前的实现采用ValveContext的实现。
