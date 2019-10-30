@@ -19,7 +19,7 @@ Development Kit）
 Java API类库中的Java
 SE API子集 [1] 和Java虚拟机这两部分统称为JRE（Java Runtime Environment）
 
-![1562206136776](。。../../images/1562206136776.png)
+![1562206136776](../../images/1562206136776.png)
 
 * Java ME（Micro Edition）：支持Java程序运行在移动终端（手机、PDA）上的平台，对
   Java API有所精简，并加入了针对移动终端的支持，这个版本以前称为J2ME。
