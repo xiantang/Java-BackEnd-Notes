@@ -41,5 +41,9 @@ us      ssh://b.git (push)
 
 获取所有远程分支到本地 `git fetch --all`
 
-### git cherry-pick
 
+
+复原submodule
+
+`git submodule foreach --recursive git reset --hard`
+`git submodule update --init --recursive`
