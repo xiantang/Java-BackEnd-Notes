@@ -109,7 +109,11 @@ daemonstatus.json = scrapyd.webservice.DaemonStatus
 `
 docker rm -v $(docker ps -a -q -f status=exited)`
 
+## 删除所有的镜像
 
+```
+docker rmi $(docker images -q)
+```
 
 # Ubuntu 16.04 安装 Docker
 
