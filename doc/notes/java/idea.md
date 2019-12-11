@@ -36,6 +36,8 @@ ctrl+shift+A 命令全搜索.
 This is almost always followed by Ctrl + Alt + Left to get back to where I was (Ctrl + Alt + Right works to “go forward” again).     
 Ctrl+N 创建class
 
+Ctrl + J 查看方法JavaDoc
+
 
 
 

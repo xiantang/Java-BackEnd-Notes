@@ -1,4 +1,4 @@
-
+![8647D9F7-BE84-40EC-B4E1-D3773F741FA7.png](blob:file:///9340b11f-01ca-471a-8284-16374d0413f2)
 
 ## 安装redis
 
@@ -117,3 +117,45 @@ sudo echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf sudo sysctl -p
 
 0 表示检查是否有足够的可用内存供应用进程使用；
 1 表示内核允许分配所有的物理内存，而不管当前的内存状态如何
+
+
+
+Redis 简单动态字符串实现
+
+
+
+不仅仅需要字面量，需要可以修改的字符串的值
+
+在底层是SDS 实现
+
+执行 SET msg "hello world"
+
+键值都是SDS
+
+
+
+![屏幕快照 2019-11-29 下午2.03.09](/Users/xiantang/Desktop/屏幕快照 2019-11-29 下午2.03.09.png)
+
+![屏幕快照 2019-11-29 下午2.14.03](/Users/xiantang/Desktop/屏幕快照 2019-11-29 下午2.14.03.png)
+
+ 
+
+简单看了下 set的底层实现 set 其实是value 为空的hashtable  
+
+之前set比 string占用小应该是 string 设置进去的时候我将值设置为了 1 所以测出来set 比 string 小 4M 其实在这种情况下两者的差异并不大  然后还有一点 set 如果全是数字的话 采用的会是 inset ，并且会根据插入的元素进行升级 升级为32 位或者 64位，可以达到解决空间的效果。
+
+用的拉链法 + 　头插
+
+load_factor = ht[0].used / ht[0].size
+
+
+
+当负载因子小于0.1的时候程序自动对hash表进行收缩
+
+
+
+渐进式rehash:
+
+rehash不是一次性的和集中性的，如果键值对有很大的量，一瞬间rehash的话会导致服务器宕机
+
+采用一种分而治之的方式进行操作，每次增删改查在完成对应工作后，都会对一个dictEntry的所有键值对进行rehash。将集中式的操作转换为了独立的可拆分的操作，并且在rehash的过程中，会从两个dict中进行查询。
