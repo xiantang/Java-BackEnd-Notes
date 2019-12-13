@@ -56,40 +56,6 @@ random (1,10)
 
 ![image-20191129194526611](/Users/xiantang/Library/Application Support/typora-user-images/image-20191129194526611.png)
 
-
-
-```
-val filterResult = Future.sequence(validResult.map(x => isUnPush(x.id, messageUid))).map {
-  bs => (validResult zip bs).filter(_._2).map(_._1)
-}
-```
-
-```
-/**
- * 以 messageUid 为粒度查询设备 uid 是否没有被推送
- *
- * @param uid
- * @param messageUid
- * @return
- */
-def isUnPush(uid: String, messageUid: String): Future[Boolean] = {
-  redisClient.sadd("uidCache:" + messageUid, uid).map {
-    x => if (x == 1) true else false
-  }
-}
-```
-
-
-
-```
-implicit val akkaSystem: ActorSystem = akka.actor.ActorSystem()
-private lazy val host: String = RedisCaches.redisConfigs.getDefaultRedisConfig.host
-private lazy val port: Int = RedisCaches.redisConfigs.getDefaultRedisConfig.port
-private lazy val redisClient = RedisClientPool(Seq(RedisServer(host, port)))
-```
-
-
-
 ![image-20191129194814552](/Users/xiantang/Library/Application Support/typora-user-images/image-20191129194814552.png)
 
 currying 的好处是

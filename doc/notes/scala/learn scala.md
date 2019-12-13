@@ -68,9 +68,3 @@ var increase = (x :Int) => x+1
 => 表示该函数将左侧的内容(任何整数X) 转换为右侧的内容(x +1)。 将任何整数x 映射成为x+1 的函数.
 
 
-
-
-
--J-javaagent:agent/skywalking-agent.jar=agent.service_name=growing-marketing
-
--javaagent:./agent/skywalking-agent.jar=agent.service_name=growing-marketing

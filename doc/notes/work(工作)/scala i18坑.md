@@ -1,3 +1,7 @@
+
+
+## i18n 无法加入编译
+
 Can't find bundle for base name filename.properties, locale ch_CN
 
 真的坑 
