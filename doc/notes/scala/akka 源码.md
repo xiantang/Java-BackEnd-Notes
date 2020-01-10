@@ -222,3 +222,69 @@ override final def run(): Unit = {
 ```
 
 来主要看一下 processMailbox 方法的实现吧
+
+```scala
+@tailrec private final def processMailbox(
+      left: Int = java.lang.Math.max(dispatcher.throughput, 1),
+      deadlineNs: Long =
+        if (dispatcher.isThroughputDeadlineTimeDefined)
+          System.nanoTime + dispatcher.throughputDeadlineTime.toNanos
+        else 0L): Unit =
+    if (shouldProcessMessage) {
+      val next = dequeue()
+      if (next ne null) {
+        if (Mailbox.debug) println(actor.self + " processing message " + next)
+        actor.invoke(next)
+        if (Thread.interrupted())
+          throw new InterruptedException("Interrupted while processing actor messages")
+        processAllSystemMessages()
+        if ((left > 1) && (!dispatcher.isThroughputDeadlineTimeDefined || (System.nanoTime - deadlineNs) < 0))
+          processMailbox(left - 1, deadlineNs)
+      }
+    }
+```
+
+
+
+很简单的实现，使用了尾递归的方式，
+
+1. 首先计算出 left 也就是分发器的吞吐量
+2. 然后从队列里面出队一个元素
+3. 调用actor 的invoke 方法
+4. 继续向下调用直到 left <1  或者
+
+有两个关键的参数，
+
+throughput 也就是单次执行  `executorService.execute(mbox)` 所消费消息的数量。超出这个数量的消息将会交给下次执行这个 mbox 的时候执行。
+
+`deadlineNs`  发送throughput数量消息的截止时间，保证throughput的消息要在截止时间内完成。
+
+调用 actor 的 invoke 方法下面会调用 ActorCell 的 receiveMessage 方法
+
+`actor.aroundReceive(behaviorStack.head, msg)`
+
+获得栈顶的 Receive 偏函数，调用 aroundReceive 来执行操作
+
+```scala
+protected[akka] def aroundReceive(receive: Actor.Receive, msg: Any): Unit = {
+  // optimization: avoid allocation of lambda
+  if (receive.applyOrElse(msg, Actor.notHandledFun).asInstanceOf[AnyRef] eq Actor.NotHandled) {
+    unhandled(msg)
+  }
+}
+```
+
+如果receive 没有match对应的message，使用了偏函数的 applyOrElse 捕获剩下的值域，判断返回值是否和 NotHandled 相等。
+
+```scala
+def unhandled(message: Any): Unit = {
+  message match {
+    case Terminated(dead) => throw DeathPactException(dead)
+    case _                => context.system.eventStream.publish(UnhandledMessage(message, sender(), self))
+  }
+}
+```
+
+对message 做一次模式匹配，如果是没有handle的message 就将它作为订阅发出。
+
+这里我们可以使用一个订阅者 `system.eventStream.subscribe(listener, classOf[UnhandledMessage]) ` 来订阅这些消息，进行日志输出。
